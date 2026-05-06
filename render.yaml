@@ -1,0 +1,21 @@
+# KimKimi API — Render Blueprint (ücretsiz web + harici Postgres, örn. Neon).
+# Dashboard: New → Blueprint → bu repo; açılınca DATABASE_URL için Neon bağlantı dizini gir.
+# Web (Next.js) ayrıca Vercel’de: kök dizin apps/web, env: NEXT_PUBLIC_API_URL = bu servisin URL’si.
+
+services:
+  - type: web
+    name: kimkimi-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: apps/api
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true

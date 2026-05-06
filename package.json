@@ -1,0 +1,12 @@
+{
+  "name": "kimkimi",
+  "private": true,
+  "description": "KimKimi monorepo — kökten kısayol scriptleri",
+  "scripts": {
+    "web": "npm run dev --prefix apps/web",
+    "web:build": "npm run build --prefix apps/web",
+    "web:install": "npm install --prefix apps/web",
+    "api": "npm run start:dev --prefix apps/api",
+    "admin": "npm run dev --prefix apps/admin"
+  }
+}

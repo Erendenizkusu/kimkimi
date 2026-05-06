@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}
+
+model Category {
+  id                   String     @id @default(uuid())
+  slug                 String     @unique
+  title                String
+  sortOrder            Int        @default(0) @map("sort_order")
+  active               Boolean    @default(true)
+  /// Son odada secilen oyun soru id'leri; ust uste ayni kategoride oncelik icin
+  lastGameQuestionIds Json?      @map("last_game_question_ids")
+  questions            Question[]
+  rooms                Room[]
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+enum QuestionPhase {
+  profile
+  game
+}
+
+enum QuestionStatus {
+  draft
+  published
+}
+
+enum QuestionType {
+  text
+  single_choice
+  multi_choice
+  date
+  number
+}
+
+model Question {
+  id               String         @id @default(uuid())
+  categoryId       String         @map("category_id")
+  category         Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  phase            QuestionPhase
+  type             QuestionType   @default(text)
+  prompt           String
+  choicesJson      Json?          @map("choices_json")
+  orderIndex       Int            @default(0) @map("order_index")
+  weight           Int            @default(1)
+  status           QuestionStatus @default(draft)
+  mapsToQuestionId String?        @map("maps_to_question_id")
+  mapsToQuestion   Question?      @relation("QuestionMap", fields: [mapsToQuestionId], references: [id], onDelete: SetNull)
+  mappedBy         Question[]     @relation("QuestionMap")
+  answers          Answer[]
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  @@index([categoryId, phase, status])
+  @@map("questions")
+}
+
+enum RoomStatus {
+  waiting
+  profile
+  playing
+  finished
+}
+
+enum PlayerSeat {
+  host
+  guest
+}
+
+model Room {
+  id                   String       @id @default(uuid())
+  shortCode            String       @unique @map("short_code")
+  secretId             String       @unique @map("secret_id")
+  categoryId           String       @map("category_id")
+  category             Category     @relation(fields: [categoryId], references: [id])
+  status               RoomStatus   @default(waiting)
+  currentQuestionIndex Int          @default(0) @map("current_question_index")
+  questionOrderJson    Json         @map("question_order_json")
+  expiresAt            DateTime     @map("expires_at")
+  roomPlayers          RoomPlayer[]
+  gameResults          GameResult?
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
+
+  @@index([shortCode])
+  @@map("rooms")
+}
+
+enum AnswerPhase {
+  profile
+  game
+}
+
+model RoomPlayer {
+  id          String   @id @default(uuid())
+  roomId      String   @map("room_id")
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  displayName String   @map("display_name")
+  seat        PlayerSeat
+  playerToken String   @unique @map("player_token")
+  createdAt   DateTime @default(now()) @map("created_at")
+  answers     Answer[]
+
+  @@unique([roomId, seat])
+  @@map("room_players")
+}
+
+model Answer {
+  id           String      @id @default(uuid())
+  roomPlayerId String      @map("room_player_id")
+  roomPlayer   RoomPlayer  @relation(fields: [roomPlayerId], references: [id], onDelete: Cascade)
+  questionId   String      @map("question_id")
+  question     Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  phase        AnswerPhase
+  valueJson    Json        @map("value_json")
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  @@unique([roomPlayerId, questionId, phase])
+  @@map("answers")
+}
+
+model GameResult {
+  id          String   @id @default(uuid())
+  roomId      String   @unique @map("room_id")
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  summaryJson Json     @map("summary_json")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("game_results")
+}

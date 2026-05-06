@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+*.log
+.DS_Store
+apps/api/.env
+apps/admin/.env.local
+apps/web/.env.local
+coverage/
+.next/
+build/
+*.iml
+.idea/
+.vercel

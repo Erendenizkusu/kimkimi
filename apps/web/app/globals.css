@@ -1,0 +1,241 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Varsayılan = koyu tema (SSR + ilk boyama) */
+:root,
+[data-theme='dark'] {
+  --background: #09090b;
+  --foreground: #fafafa;
+
+  --kk-page: #09090b;
+  --kk-fg: #fafafa;
+  --kk-fg-soft: #d4d4d8;
+  --kk-muted: #a1a1aa;
+  --kk-muted-strong: #71717a;
+  --kk-border: rgba(255, 255, 255, 0.1);
+  --kk-border-strong: rgba(255, 255, 255, 0.15);
+  --kk-surface: rgba(255, 255, 255, 0.06);
+  --kk-surface-muted: rgba(255, 255, 255, 0.05);
+  --kk-surface-elevated: rgba(255, 255, 255, 0.08);
+  --kk-input-bg: rgba(9, 9, 11, 0.8);
+  --kk-code-bg: rgba(24, 24, 27, 0.8);
+  --kk-header-bg: rgba(9, 9, 11, 0.75);
+  --kk-footer-text: #71717a;
+  --kk-logo: #ffffff;
+  --kk-logo-hover: #ddd6fe;
+  --kk-nav-cta: #c4b5fd;
+  --kk-gif-card: rgba(9, 9, 11, 0.9);
+  --kk-modal-bg: rgba(24, 24, 27, 0.95);
+  --kk-modal-overlay: rgba(0, 0, 0, 0.75);
+  --kk-check-bg: #18181b;
+  --kk-shadow-elev: rgba(0, 0, 0, 0.25);
+  --kk-shadow-card: rgba(0, 0, 0, 0.2);
+  --kk-glass-bg: rgba(255, 255, 255, 0.06);
+  --kk-nav-fg: #d4d4d8;
+  --kk-nav-hover-bg: rgba(255, 255, 255, 0.05);
+  --kk-nav-hover-fg: #ffffff;
+  --kk-doc-body: #d4d4d8;
+  --kk-doc-heading: #ffffff;
+
+  /* Form: zeminle eşleşen metin / placeholder (native color-scheme uyumu) */
+  --kk-input-text: #f4f4f5;
+  --kk-input-placeholder: #9ca3af;
+  /* Mor tint üstü: açık yazı */
+  --kk-chip-violet-fg: #faf5ff;
+  --kk-on-violet-fg: #fafafa;
+  --kk-link: #a78bfa;
+  --kk-link-hover: #c4b5fd;
+
+  --kk-ambient-base: #09090b;
+  --kk-ambient-radial: rgba(109, 40, 217, 0.35);
+  --kk-ambient-blob-left: rgba(192, 38, 211, 0.2);
+  --kk-ambient-blob-right: rgba(124, 58, 237, 0.25);
+  --kk-ambient-bottom: rgba(9, 9, 11, 0.92);
+
+  --kk-hero-scrim-from: #09090b;
+  --kk-hero-scrim-via: rgba(9, 9, 11, 0.88);
+  --kk-hero-scrim-to: rgba(9, 9, 11, 0.35);
+  --kk-hero-tint-from: rgba(76, 29, 149, 0.55);
+  --kk-hero-tint-to: rgba(131, 24, 67, 0.35);
+
+  --kk-callout-success-bg: rgba(6, 78, 59, 0.55);
+  --kk-callout-success-border: rgba(52, 211, 153, 0.35);
+  --kk-callout-success-fg: #ecfdf5;
+  --kk-callout-warn-bg: rgba(69, 26, 3, 0.5);
+  --kk-callout-warn-border: rgba(251, 191, 36, 0.35);
+  --kk-callout-warn-fg: #fef9c3;
+  --kk-callout-error-bg: rgba(69, 10, 10, 0.55);
+  --kk-callout-error-border: rgba(248, 113, 113, 0.4);
+  --kk-callout-error-fg: #fecaca;
+}
+
+[data-theme='light'] {
+  --background: #f8f5ff;
+  --foreground: #1e1033;
+
+  --kk-page: #f8f5ff;
+  --kk-fg: #1e1033;
+  --kk-fg-soft: #3d2b5c;
+  --kk-muted: #6d5494;
+  --kk-muted-strong: #5b4490;
+  --kk-border: rgba(124, 58, 237, 0.22);
+  --kk-border-strong: rgba(192, 38, 211, 0.28);
+  --kk-surface: rgba(255, 255, 255, 0.88);
+  --kk-surface-muted: rgba(139, 92, 246, 0.1);
+  --kk-surface-elevated: rgba(255, 255, 255, 0.95);
+  --kk-input-bg: #ffffff;
+  --kk-code-bg: rgba(255, 255, 255, 0.92);
+  --kk-header-bg: rgba(255, 255, 255, 0.78);
+  --kk-footer-text: #7c6aa0;
+  --kk-logo: #4c1d95;
+  --kk-logo-hover: #6d28d9;
+  --kk-nav-cta: #5b21b6;
+  --kk-gif-card: rgba(255, 255, 255, 0.94);
+  --kk-modal-bg: rgba(255, 255, 255, 0.96);
+  --kk-modal-overlay: rgba(30, 16, 51, 0.45);
+  --kk-check-bg: #faf5ff;
+  --kk-shadow-elev: rgba(91, 33, 182, 0.14);
+  --kk-shadow-card: rgba(124, 58, 237, 0.12);
+  --kk-glass-bg: rgba(255, 255, 255, 0.9);
+  --kk-nav-fg: #5b4490;
+  --kk-nav-hover-bg: rgba(139, 92, 246, 0.14);
+  --kk-nav-hover-fg: #4c1d95;
+  --kk-doc-body: #4a3668;
+  --kk-doc-heading: #2d1b4e;
+
+  --kk-input-text: #1e1033;
+  --kk-input-placeholder: #5b4a78;
+  --kk-chip-violet-fg: #3b0764;
+  --kk-on-violet-fg: #2e1065;
+  --kk-link: #5b21b6;
+  --kk-link-hover: #6d28d9;
+
+  --kk-ambient-base: #f5f0ff;
+  --kk-ambient-radial: rgba(139, 92, 246, 0.42);
+  --kk-ambient-blob-left: rgba(217, 70, 239, 0.32);
+  --kk-ambient-blob-right: rgba(124, 58, 237, 0.36);
+  --kk-ambient-bottom: rgba(248, 245, 255, 0.9);
+
+  --kk-hero-scrim-from: #f8f5ff;
+  --kk-hero-scrim-via: rgba(248, 245, 255, 0.92);
+  --kk-hero-scrim-to: rgba(248, 245, 255, 0.4);
+  --kk-hero-tint-from: rgba(139, 92, 246, 0.35);
+  --kk-hero-tint-to: rgba(236, 72, 153, 0.28);
+
+  --kk-callout-success-bg: rgba(209, 250, 229, 0.92);
+  --kk-callout-success-border: rgba(4, 120, 87, 0.4);
+  --kk-callout-success-fg: #064e3b;
+  --kk-callout-warn-bg: rgba(254, 243, 199, 0.95);
+  --kk-callout-warn-border: rgba(180, 83, 9, 0.45);
+  --kk-callout-warn-fg: #78350f;
+  --kk-callout-error-bg: rgba(254, 226, 226, 0.95);
+  --kk-callout-error-border: rgba(185, 28, 28, 0.4);
+  --kk-callout-error-fg: #7f1d1d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+@layer base {
+  /* Metin alanları: tema ile uyumlu renk (sistem light input + açık placeholder hatasını önler) */
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']),
+  textarea {
+    color: var(--kk-input-text);
+  }
+
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden'])::placeholder,
+  textarea::placeholder {
+    color: var(--kk-input-placeholder);
+    opacity: 1;
+  }
+
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']):autofill,
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']):autofill:hover,
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']):autofill:focus,
+  textarea:autofill,
+  textarea:autofill:hover,
+  textarea:autofill:focus {
+    -webkit-text-fill-color: var(--kk-input-text);
+    caret-color: var(--kk-input-text);
+    box-shadow: inset 0 0 0 1000px var(--kk-input-bg) !important;
+    transition: background-color 99999s ease-out;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /**
+   * Hafif film greni — GIF üstünde banding azaltır.
+   */
+  .hero-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  .glass-panel {
+    border-radius: 1rem;
+    border: 1px solid var(--kk-border);
+    background: var(--kk-glass-bg);
+    box-shadow: 0 25px 50px -12px var(--kk-shadow-elev);
+    backdrop-filter: blur(12px);
+  }
+
+  .glass-nav-link {
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    color: var(--kk-nav-fg);
+    transition:
+      color 150ms ease,
+      background 150ms ease;
+  }
+
+  .glass-nav-link:hover {
+    background: var(--kk-nav-hover-bg);
+    color: var(--kk-nav-hover-fg);
+  }
+}
+
+@layer components {
+  .doc-article {
+    @apply max-w-none space-y-4 leading-relaxed;
+    color: var(--kk-doc-body);
+  }
+  .doc-article h1 {
+    @apply font-display text-3xl font-bold tracking-tight;
+    color: var(--kk-doc-heading);
+  }
+  .doc-article p {
+    @apply leading-relaxed;
+  }
+  .doc-article ol,
+  .doc-article ul {
+    @apply list-inside list-decimal space-y-2 pl-1 leading-relaxed;
+  }
+  .doc-article ul {
+    @apply list-disc;
+  }
+}
