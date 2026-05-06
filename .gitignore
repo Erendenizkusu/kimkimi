@@ -1,5 +1,6 @@
 node_modules/
-dist/
+# Yalnızca repo kökündeki dist; aksi halde apps/api/dist de eşleşir ve Render slug’ında derleme çıktısı eksik kalabilir.
+/dist/
 .env
 *.log
 .DS_Store
