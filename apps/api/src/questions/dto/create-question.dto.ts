@@ -1,14 +1,31 @@
+import { QuestionPhase, QuestionStatus, QuestionType } from '@prisma/client';
 import {
   IsEnum,
   IsInt,
-  IsObject,
   IsOptional,
   IsString,
   IsUUID,
   MaxLength,
   MinLength,
+  Validate,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
 } from 'class-validator';
-import { QuestionPhase, QuestionStatus, QuestionType } from '@prisma/client';
+
+/** Prisma Json — çoktan seçmede dizi `["A","B"]` veya nesne şekilleri; @IsObject() diziyi reddediyordu. */
+@ValidatorConstraint({ name: 'choicesJsonValue', async: false })
+class ChoicesJsonValueConstraint implements ValidatorConstraintInterface {
+  validate(v: unknown): boolean {
+    if (v === undefined || v === null) return true;
+    if (Array.isArray(v)) {
+      return v.every((x) => typeof x === 'string' || (typeof x === 'object' && x !== null));
+    }
+    return typeof v === 'object' && v !== null && !Array.isArray(v);
+  }
+  defaultMessage(): string {
+    return 'choicesJson bir JSON nesnesi veya dizi olmalı (örn. ["O","Ben"])';
+  }
+}
 
 export class CreateQuestionDto {
   @IsUUID()
@@ -27,8 +44,8 @@ export class CreateQuestionDto {
   prompt!: string;
 
   @IsOptional()
-  @IsObject()
-  choicesJson?: Record<string, unknown>;
+  @Validate(ChoicesJsonValueConstraint)
+  choicesJson?: unknown;
 
   @IsOptional()
   @IsInt()
