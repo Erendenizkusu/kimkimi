@@ -4,6 +4,9 @@ import { userFacingApiMessage } from './userFacingErrors';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
+/** Render ücretsiz katmanı uyuyunca ilk istek 30–60+ sn sürebilir; 18 sn yetmiyordu. */
+const API_FETCH_TIMEOUT_MS = 90_000;
+
 /**
  * Tarayıcı düzeyindeki ağ hatalarını (Failed to fetch, CORS, kapalı API vb.)
  * teknik İngilizce yerine okunaklı Türkçe metne çevirir.
@@ -22,13 +25,13 @@ export function describeClientFetchError(e: unknown): string {
 
 async function apiFetch(path: string, init?: RequestInit): Promise<Response> {
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 18_000);
+  const t = setTimeout(() => ctrl.abort(), API_FETCH_TIMEOUT_MS);
   try {
     return await fetch(`${getApiUrl()}${path}`, { ...init, signal: ctrl.signal });
   } catch (e) {
     if (e instanceof Error && e.name === 'AbortError') {
       throw new Error(
-        'İstek zaman aşımına uğradı (18 sn). API yanıt vermiyor olabilir; sunucuyu ve bağlantını kontrol et.',
+        `İstek zaman aşımına uğradı (${API_FETCH_TIMEOUT_MS / 1000} sn). Ücretsiz API sunucusu uzun süredir uyuyorsa ilk yükleme 1 dakikayı bulabilir; sayfayı bir kez daha yenile. Hâlâ olmuyorsa API adresini (${getApiUrl()}) ve Render loglarını kontrol et.`,
       );
     }
     throw new Error(describeClientFetchError(e));
