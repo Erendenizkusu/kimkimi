@@ -2,7 +2,7 @@
 
 Sıra: **API (NestJS)** → **Admin (Next.js)** → **Web (Next.js)** → **Mobil (Flutter)**.
 
-## Önkoşullar
+## Önkoşullar..
 
 - Node.js 20+
 - Docker Desktop (PostgreSQL için)
