@@ -6,7 +6,8 @@
     "web": "npm run dev --prefix apps/web",
     "web:build": "npm run build --prefix apps/web",
     "web:install": "npm install --prefix apps/web",
-    "api": "npm run start:dev --prefix apps/api",
-    "admin": "npm run dev --prefix apps/admin"
+    "admin": "npm run dev --prefix apps/admin",
+    "db:migrate": "npm run db:migrate --prefix apps/web",
+    "db:seed": "npm run db:seed --prefix apps/web"
   }
 }

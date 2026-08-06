@@ -16,7 +16,7 @@ String describeClientNetworkError(Object e) {
       msg.contains('connection refused') ||
       msg.contains('connection reset')) {
     return 'Sunucuya ulaşılamıyor (ağ hatası). KimKimi API’nin çalıştığından emin ol. Uygulama şu adrese istek atıyor: $kApiBase. '
-        'Emülatörde API bilgisayarda çalışmalı; gerçek cihazda `flutter run --dart-define=API_BASE=http://<PC_IP>:4000` kullan.';
+        'Emülatörde web sunucusu bilgisayarda çalışmalı; gerçek cihazda `flutter run --dart-define=API_BASE=http://<PC_IP>:3000/api` kullan.';
   }
   return e.toString();
 }

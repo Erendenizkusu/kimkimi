@@ -63,11 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _cycleTheme() async {
     final cur = kkThemeMode.value;
-    final next = cur == ThemeMode.system
-        ? ThemeMode.light
-        : cur == ThemeMode.light
+    final next = cur == ThemeMode.light
             ? ThemeMode.dark
-            : ThemeMode.system;
+            : ThemeMode.light;
     await persistThemeMode(next);
   }
 
@@ -254,9 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icon(
                         mode == ThemeMode.dark
                             ? Icons.dark_mode_rounded
-                            : mode == ThemeMode.light
-                                ? Icons.light_mode_rounded
-                                : Icons.brightness_auto_rounded,
+                            : Icons.light_mode_rounded
                       ),
                     );
                   },
@@ -392,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Emülatörde API bilgisayarda çalışmalı (örn. apps/api, port 4000).',
+                        'Emülatörde sunucu bilgisayarda çalışmalı (apps/web, port 3000).',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: scheme.onSurfaceVariant,
                             ),

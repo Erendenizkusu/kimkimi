@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { io, type Socket } from 'socket.io-client';
 
 import { QuestionFields } from '@/components/game/QuestionFields';
 import { RoomResults } from '@/components/game/RoomResults';
@@ -14,7 +13,6 @@ import {
   submitGameAnswer,
   submitProfileAnswers,
 } from '@/lib/api';
-import { getApiUrl } from '@/lib/config';
 import { WEB_MEDIA } from '@/lib/webMedia';
 import { MAX_ANSWER_WORDS, needsShortAnswer, sortQuestions, wordCount } from '@/lib/questions';
 import { clearRoomSession, loadRoomSession, type RoomSession } from '@/lib/roomSession';
@@ -41,11 +39,14 @@ function roomStatusLabel(status: string): string {
   }
 }
 
+/** Oda durumunun sunucudan çekilme sıklığı (eski socket.io yayınının yerine). */
+const ROOM_POLL_INTERVAL_MS = 2000;
+
 export default function RoomClient({ secretId }: { secretId: string }) {
   const [session, setSession] = useState<RoomSession | null>(null);
   const [boot, setBoot] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  const [socketMsg, setSocketMsg] = useState<string | null>(null);
+  const [syncMsg, setSyncMsg] = useState<string | null>(null);
   const [roomState, setRoomState] = useState<Record<string, unknown> | null>(null);
 
   const [profileQs, setProfileQs] = useState<PublicQuestion[]>([]);
@@ -101,7 +102,27 @@ export default function RoomClient({ secretId }: { secretId: string }) {
     }
     setSession(sess);
 
-    let socket: Socket | null = null;
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    /**
+     * Eskiden socket.io `room_state` yayını vardı; Vercel serverless kalıcı
+     * WebSocket tutamadığı için sunucu durumu düzenli aralıkla çekiliyor.
+     * Oyun iki kişilik ve sıra tabanlı, bu tempo yeterli.
+     */
+    const poll = async () => {
+      if (stopped) return;
+      try {
+        const st = await getRoomState(secretId, sess.playerToken);
+        if (stopped) return;
+        setRoomState({ ...st });
+        setSyncMsg(null);
+      } catch (e) {
+        if (!stopped) setSyncMsg(String(e));
+      } finally {
+        if (!stopped) timer = setTimeout(poll, ROOM_POLL_INTERVAL_MS);
+      }
+    };
 
     (async () => {
       try {
@@ -112,27 +133,12 @@ export default function RoomClient({ secretId }: { secretId: string }) {
       } finally {
         setBoot(false);
       }
-
-      socket = io(getApiUrl(), { transports: ['websocket'], autoConnect: false });
-      socket.on('connect', () => {
-        socket?.emit('join_room', { secretId, playerToken: sess.playerToken });
-      });
-      const merge = (data: unknown) => {
-        if (data && typeof data === 'object' && !Array.isArray(data)) {
-          setRoomState({ ...(data as Record<string, unknown>) });
-        }
-      };
-      socket.on('state_sync', merge);
-      socket.on('room_state', merge);
-      socket.on('error', (data: unknown) => {
-        const o = asRecord(data);
-        setSocketMsg((o.message as string) || String(data));
-      });
-      socket.connect();
+      timer = setTimeout(poll, ROOM_POLL_INTERVAL_MS);
     })();
 
     return () => {
-      socket?.disconnect();
+      stopped = true;
+      if (timer) clearTimeout(timer);
     };
   }, [secretId]);
 
@@ -321,9 +327,9 @@ export default function RoomClient({ secretId }: { secretId: string }) {
         </button>
       </div>
 
-      {socketMsg && (
+      {syncMsg && (
         <div className="rounded-xl border border-[color:var(--kk-callout-warn-border)] bg-[color:var(--kk-callout-warn-bg)] px-4 py-3 text-sm text-[color:var(--kk-callout-warn-fg)] backdrop-blur-sm">
-          {socketMsg}
+          {syncMsg}
         </div>
       )}
 

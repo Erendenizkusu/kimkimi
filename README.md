@@ -1,6 +1,6 @@
 # KimKimi — _do you know who I am?_
 
-A real-time, two-player quiz game about **how well two people actually know each other**.
+A two-player quiz game about **how well two people actually know each other**.
 Each player first answers questions about themselves to build an answer key; then both are
 quizzed on each other in synchronized rounds, and the game reveals **who knows whom better**.
 
@@ -13,16 +13,20 @@ A monorepo under `apps/`, with PostgreSQL as the source of truth for data and ga
 
 | App | Stack | Role |
 |-----|-------|------|
-| `api` | **NestJS** (REST + WebSocket) · Prisma | Game logic, rooms, real-time turns, auth |
-| `web` | **Next.js** | Public site — marketing, SEO, store bridge, optional browser play |
+| `web` | **Next.js** (site + API route handlers) · Prisma | Public site **and** the game backend — rooms, rounds, scoring, auth |
 | `admin` | **Next.js** | Category / question / content management (admin-only) |
 | `mobile` | **Flutter** (iOS + Android) | Primary game client |
-| _db_ | **PostgreSQL** (Docker) | Persistent state & business rules |
+| _db_ | **PostgreSQL** | Persistent state & business rules |
 
-- Real-time round sync via a **WebSocket gateway** (versioned event names — see
-  [`apps/api/docs/WS_EVENTS.md`](apps/api/docs/WS_EVENTS.md)).
-- **JWT** auth over httpOnly cookies; admin routes restricted to `ROLE_ADMIN`; per-origin CORS.
-- Local Postgres via Docker (named volume + healthcheck).
+- **One deployable.** The backend lives in `apps/web/app/api/*` (route handlers) with the
+  game logic in `apps/web/lib/server/*`. There is no separate API host, so there is no
+  cold-start wait on the first request.
+- **Round sync by polling.** Clients re-read `GET /api/rooms/:secretId/state` every two
+  seconds. The game is two-player and turn-based, so this replaces the old WebSocket
+  gateway — which serverless hosting cannot keep open anyway.
+- **JWT** auth for the admin panel (`Bearer` token, `role=admin` enforced per route).
+- Question pool is seeded from `apps/web/prisma/*-pool.ts` (384 profile/game pairs across
+  six categories).
 
 ## Getting started
 
@@ -32,18 +36,19 @@ A monorepo under `apps/`, with PostgreSQL as the source of truth for data and ga
 # 1. Database — Postgres on host port 5433
 docker compose up -d
 
-# 2. API (apps/api) — REST at :4000, Swagger at /docs
-cd apps/api
-cp ../../.env.example .env
+# 2. Web + API (apps/web) — site and API at :3000
+cd apps/web
+cp .env.local.example .env.local
 npx prisma migrate deploy
 npx prisma db seed
-npm run start:dev
+npm run dev
 
 # 3. Admin panel (apps/admin) — port 3001
 cd apps/admin && cp .env.local.example .env.local && npm run dev
 
-# 4. Public web (apps/web) — port 3000
-cd apps/web && cp .env.local.example .env.local && npm run dev
+# 4. Mobile client — point it at the web server
+cd apps/mobile
+flutter run --dart-define=API_BASE=http://10.0.2.2:3000/api   # Android emulator
 ```
 
 Seeded admin (local): `admin@kimkimi.local` / `Admin123!`
@@ -51,15 +56,22 @@ Seeded admin (local): `admin@kimkimi.local` / `Admin123!`
 ### Tests
 
 ```bash
-cd apps/api && npm test && npm run test:e2e   # unit + e2e
-cd apps/admin && npm run test:pw              # Playwright (dev server up)
-cd apps/mobile && flutter test                # Flutter widget/unit tests
+cd apps/web    && npx tsc --noEmit && npm run build   # typecheck + build
+cd apps/admin  && npm run test:pw                     # Playwright (dev server up)
+cd apps/mobile && flutter analyze && flutter test     # analyze + widget/unit tests
 ```
 
-## Screenshots
+## Deployment
 
-_Coming soon._
+Everything runs on free tiers, on a single vendor — see [`docs/DEPLOY.md`](docs/DEPLOY.md).
+
+| Piece | Where |
+|---|---|
+| `apps/web` (site + API) | Vercel — root directory `apps/web` |
+| `apps/admin` | Vercel — root directory `apps/admin`, `API_URL` points at the web app's `/api` |
+| Postgres | Neon (scale-to-zero, resumes in about a second) |
+| `apps/mobile` | Play Store / App Store, built with `--dart-define=API_BASE=https://<domain>/api` |
 
 ## Tech stack
 
-`NestJS` · `Prisma` · `PostgreSQL` · `WebSocket / Socket.io` · `Next.js` · `Flutter` · `Docker` · `TypeScript`
+`Next.js` · `Prisma` · `PostgreSQL` · `Zod` · `Flutter` · `TypeScript` · `Vercel` · `Neon`

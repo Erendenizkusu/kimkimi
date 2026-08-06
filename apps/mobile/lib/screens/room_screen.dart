@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../api_config.dart';
 import '../category_emoji.dart';
@@ -104,10 +104,11 @@ class RoomScreen extends StatefulWidget {
 }
 
 class _RoomScreenState extends State<RoomScreen> {
-  io.Socket? _socket;
+  Timer? _pollTimer;
+  bool _polling = false;
   Map<String, dynamic> _state = {};
   String? _httpError;
-  String? _socketMsg;
+  String? _syncMsg;
   bool _booting = true;
 
   dynamic _results;
@@ -144,7 +145,7 @@ class _RoomScreenState extends State<RoomScreen> {
     } finally {
       if (mounted) setState(() => _booting = false);
     }
-    _connectSocket();
+    _startPolling();
   }
 
   void _applyIncoming(dynamic data) {
@@ -177,27 +178,37 @@ class _RoomScreenState extends State<RoomScreen> {
     }
   }
 
-  void _connectSocket() {
-    final s = io.io(
-      kApiBase,
-      io.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build(),
-    );
-    _socket = s;
-    s.onConnect((_) {
-      s.emit('join_room', {'secretId': widget.secretId, 'playerToken': widget.playerToken});
-    });
-    s.on('state_sync', _applyIncoming);
-    s.on('room_state', _applyIncoming);
-    s.on('error', (data) {
-      final msg = data is Map ? data['message']?.toString() : data.toString();
-      if (mounted) setState(() => _socketMsg = msg ?? 'Socket hatası');
-    });
-    s.connect();
+  /// Eskiden socket.io `room_state` yayını vardı; API artık Vercel'de serverless
+  /// çalıştığı ve kalıcı WebSocket tutulamadığı için oda durumu düzenli aralıkla
+  /// çekiliyor. Oyun iki kişilik ve sıra tabanlı olduğundan bu tempo yeterli.
+  void _startPolling() {
+    _pollTimer?.cancel();
+    _pollTimer = Timer.periodic(kRoomPollInterval, (_) => _pollOnce());
+  }
+
+  Future<void> _pollOnce() async {
+    if (!mounted || _polling) return;
+    _polling = true;
+    try {
+      final api = KimKimiRoomApi(secretId: widget.secretId, playerToken: widget.playerToken);
+      final s = await api.getState();
+      if (!mounted) return;
+      _applyIncoming(s);
+      if (_syncMsg != null) setState(() => _syncMsg = null);
+    } catch (e) {
+      if (!mounted) return;
+      final msg = e is StateException
+          ? userFacingApiMessage(e.statusCode ?? 500, e.body)
+          : describeClientNetworkError(e);
+      setState(() => _syncMsg = msg);
+    } finally {
+      _polling = false;
+    }
   }
 
   @override
   void dispose() {
-    _socket?.dispose();
+    _pollTimer?.cancel();
     super.dispose();
   }
 
@@ -303,7 +314,7 @@ class _RoomScreenState extends State<RoomScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          if (_socketMsg != null)
+          if (_syncMsg != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Material(
@@ -317,7 +328,7 @@ class _RoomScreenState extends State<RoomScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          _socketMsg!,
+                          _syncMsg!,
                           style: TextStyle(color: scheme.onErrorContainer),
                         ),
                       ),
