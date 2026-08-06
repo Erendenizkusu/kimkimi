@@ -2,9 +2,10 @@ import { AnswerPhase, QuestionType, type RoomPlayer } from '@prisma/client';
 
 import { parseGameOrderJson } from './game-order-json';
 import { prisma } from './prisma';
+import { fuzzyTextMatch, normalizeAnswer } from './text-match';
 
 export function normalizeText(input: string): string {
-  return input.trim().toLocaleLowerCase('tr-TR');
+  return normalizeAnswer(input);
 }
 
 /** choicesJson dizisinden şık değerlerini okur (string veya { value, label }). */
@@ -52,7 +53,11 @@ export function compareValues(
   if (answered === null || answered === undefined) return false;
   switch (type) {
     case QuestionType.text:
+      // Serbest metinde aksan/büyük-küçük farkı ve küçük yazım hataları affedilir
+      // (bkz. text-match.ts) — "İstanbul"/"istanbul", "kopwk"/"köpek".
+      return fuzzyTextMatch(String(expected ?? ''), String(answered ?? ''));
     case QuestionType.date:
+      // Tarih tarih seçiciden geliyor; burada tolerans istemiyoruz.
       return normalizeText(String(expected ?? '')) === normalizeText(String(answered ?? ''));
     case QuestionType.number:
       return Number(expected) === Number(answered);

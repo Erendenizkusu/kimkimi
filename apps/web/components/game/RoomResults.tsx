@@ -89,6 +89,19 @@ export function RoomResults({ results, players }: Props) {
         </p>
       </div>
 
+      <div className="rounded-2xl border border-amber-400/25 bg-amber-950/25 p-4 backdrop-blur-sm">
+        <p className="text-sm font-semibold text-amber-100">Sonucu son söz sanmayın 🤔</p>
+        <p className="mt-2 text-sm leading-relaxed text-amber-100/85">
+          Yazılan cevaplar birebir tutmadığında puan verilemiyor. Aynı şeyi kastedip farklı
+          anlatmış olabilirsiniz — biri &quot;kuzu tandır&quot; yazarken diğeri &quot;et
+          yemekleri&quot; demiş olabilir. Aşağıdaki cevapları birlikte gözden geçirin,
+          tartışın ve hangilerinin aslında doğru sayılması gerektiğine siz karar verin.
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-amber-100/85">
+          Sonra puanları yeniden hesaplayın — bakalım gerçek kazanan kim?
+        </p>
+      </div>
+
       {per.map((row, idx) => {
         const seat = String(row.seat ?? '');
         const details = (row.details as Record<string, unknown>[]) ?? [];

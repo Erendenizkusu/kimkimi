@@ -170,6 +170,19 @@ body {
     opacity: 1;
   }
 
+  /* iOS Safari, yazı boyutu 16px’in altındaki bir alana odaklanınca sayfayı
+     otomatik yakınlaştırıyor ve kullanıcı elle uzaklaştırmak zorunda kalıyor.
+     Küçük ekranda tüm form alanlarını 16px’e sabitliyoruz; `sm` ve üstünde
+     bileşenlerdeki `text-sm` (14px) geçerli kalır, masaüstü görünümü değişmez.
+     Seçici bilerek `.text-sm`ten daha spesifik — Tailwind sınıfını yenmesi gerek. */
+  @media (max-width: 639.98px) {
+    input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']),
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+
   input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']):autofill,
   input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']):autofill:hover,
   input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='color']):not([type='hidden']):autofill:focus,

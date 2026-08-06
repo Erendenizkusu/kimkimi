@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    // Belirtilmediğinde tsc ES5'e düşüyor ve Set yinelemesi / Unicode property
+    // regex (\p{L}) gibi şeyleri reddediyor. Gerçek çıktıyı Next/SWC üretiyor
+    // (noEmit: true), yani bu yalnızca tip kontrolünün tabanı.
+    "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
