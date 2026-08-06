@@ -14,10 +14,6 @@ import '../user_facing_errors.dart';
 import '../services/kimkimi_room_api.dart';
 import '../widgets/kk_surface_card.dart';
 
-Map<String, dynamic> _asStringKeyMap(dynamic raw) {
-  if (raw == null || raw is! Map) return {};
-  return raw.map((k, v) => MapEntry(k.toString(), v));
-}
 
 String _formatResultValue(dynamic v) {
   if (v == null) return '—';
@@ -30,7 +26,7 @@ String _formatResultValue(dynamic v) {
   var host = 'Host';
   var guest = 'Misafir';
   for (final p in players) {
-    final m = _asStringKeyMap(p);
+    final m = asStringKeyMap(p);
     final seat = m['seat']?.toString() ?? '';
     final n = m['displayName']?.toString().trim() ?? '';
     if (n.isEmpty) continue;
@@ -40,36 +36,11 @@ String _formatResultValue(dynamic v) {
   return (host: host, guest: guest);
 }
 
-List<({String label, String value})> _parseChoices(dynamic raw) {
-  if (raw == null || raw is! List) return [];
-  final out = <({String label, String value})>[];
-  for (final e in raw) {
-    if (e is String) {
-      out.add((label: e, value: e));
-    } else if (e is Map) {
-      final m = _asStringKeyMap(e);
-      final v = m['value'] ?? m['id'] ?? m['key'];
-      final l = m['label'] ?? m['title'] ?? v;
-      if (v != null) {
-        out.add((label: l.toString(), value: v.toString()));
-      }
-    }
-  }
-  return out;
-}
 
 /// Serbest metin cevaplarındaki kelime tavanı. Web karşılığı:
 /// `apps/web/lib/questions.ts` → `MAX_ANSWER_WORDS` (iki taraf aynı olmalı).
 const int kMaxAnswerWords = 4;
 
-int _wordCount(String s) =>
-    s.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).length;
-
-bool _needsShortAnswer(PublicQuestion q) {
-  if (q.type == 'number' || q.type == 'date' || q.type == 'multi_choice') return false;
-  if (q.type == 'single_choice' && _parseChoices(q.choicesJson).isNotEmpty) return false;
-  return true;
-}
 
 Widget _questionPromptShell(BuildContext context, String prompt, Widget child) {
   return Column(
@@ -149,7 +120,7 @@ class _RoomScreenState extends State<RoomScreen> {
   }
 
   void _applyIncoming(dynamic data) {
-    final next = _asStringKeyMap(data);
+    final next = asStringKeyMap(data);
     if (next.isEmpty) return;
     final curQ = _state['currentQuestionId']?.toString();
     final newQ = next['currentQuestionId']?.toString();
@@ -274,7 +245,7 @@ class _RoomScreenState extends State<RoomScreen> {
     }
 
     final status = _state['status']?.toString() ?? '';
-    final category = _asStringKeyMap(_state['category']);
+    final category = asStringKeyMap(_state['category']);
     final title = category['title']?.toString() ?? 'Oda';
     final slug = category['slug']?.toString() ?? '';
     final titleWithEmoji = categoryTitleWithEmoji(title: title, slug: slug);
@@ -387,7 +358,7 @@ class _RoomPlayersCard extends StatelessWidget {
           Text('Oyuncular', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           ...players.map((p) {
-            final m = _asStringKeyMap(p);
+            final m = asStringKeyMap(p);
             final seat = m['seat']?.toString() ?? '';
             final name = m['displayName']?.toString() ?? '';
             final me = seat == mySeat;
@@ -524,7 +495,7 @@ class _ProfileBodyState extends State<_ProfileBody> {
   Map<String, dynamic>? _progressForMe() {
     final list = (widget.state['profileProgress'] as List<dynamic>?) ?? [];
     for (final e in list) {
-      final m = _asStringKeyMap(e);
+      final m = asStringKeyMap(e);
       if (m['seat']?.toString() == widget.mySeat) return m;
     }
     return null;
@@ -554,9 +525,9 @@ class _ProfileBodyState extends State<_ProfileBody> {
         );
         return;
       }
-      if (_needsShortAnswer(q)) {
+      if (questionNeedsShortAnswer(q)) {
         final s = v is String ? v.trim() : v.toString().trim();
-        if (_wordCount(s) > kMaxAnswerWords) {
+        if (countWords(s) > kMaxAnswerWords) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -668,7 +639,7 @@ class _QuestionField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final choices = _parseChoices(q.choicesJson);
+    final choices = parseChoices(q.choicesJson);
     final promptStyle = Theme.of(context).textTheme.titleSmall?.copyWith(height: 1.4);
 
     switch (q.type) {
@@ -915,9 +886,9 @@ class _PlayingBodyState extends State<_PlayingBody> {
       );
       return;
     }
-    if (_needsShortAnswer(q)) {
+    if (questionNeedsShortAnswer(q)) {
       final s = _value is String ? (_value as String).trim() : _value.toString().trim();
-      if (_wordCount(s) > kMaxAnswerWords) {
+      if (countWords(s) > kMaxAnswerWords) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Metin cevabı en fazla $kMaxAnswerWords kelime olmalı.'),
@@ -1050,7 +1021,7 @@ class _FinishedBody extends StatelessWidget {
       );
     }
 
-    final m = _asStringKeyMap(results);
+    final m = asStringKeyMap(results);
     final winner = m['winnerSeat']?.toString();
     final per = (m['perPlayer'] as List<dynamic>?) ?? [];
     final names = _namesFromPlayers(players);
@@ -1142,8 +1113,45 @@ class _FinishedBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
+        // Metin cevapları birebir tutmadığında puan verilemiyor; oyuncuları
+        // sonuçları birlikte gözden geçirmeye çağırıyoruz.
+        KkSurfaceCard(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.lightbulb_outline_rounded, size: 20, color: scheme.tertiary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Sonucu son söz sanmayın',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Yazılan cevaplar birebir tutmadığında puan verilemiyor. Aynı şeyi kastedip '
+                'farklı anlatmış olabilirsiniz — biri “kuzu tandır” yazarken diğeri '
+                '“et yemekleri” demiş olabilir. Aşağıdaki cevapları birlikte gözden geçirin, '
+                'tartışın ve hangilerinin aslında doğru sayılması gerektiğine siz karar verin.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.45),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Sonra puanları yeniden hesaplayın — bakalım gerçek kazanan kim?',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.45),
+              ),
+            ],
+          ),
+        ),
         ...per.map((raw) {
-          final p = _asStringKeyMap(raw);
+          final p = asStringKeyMap(raw);
           final seat = p['seat']?.toString() ?? '';
           final score = p['score'];
           final max = p['max'];
@@ -1156,7 +1164,7 @@ class _FinishedBody extends StatelessWidget {
               title: Text(label),
               subtitle: Text('$score / $max doğru'),
               children: details.map((d) {
-                final dm = _asStringKeyMap(d);
+                final dm = asStringKeyMap(d);
                 final ok = dm['correct'] == true;
                 final prompt = dm['prompt']?.toString() ?? '';
                 return Padding(

@@ -79,13 +79,27 @@ iletiliyor.
 
 ## 4) Mobil
 
+Varsayılan **üretimdir** — `api_config.dart` içindeki `kProductionApiBase`. Mağaza paketi
+için ekstra bayrak gerekmez:
+
 ```bash
 cd apps/mobile
-flutter build appbundle --dart-define=API_BASE=https://<web-domain>/api
+flutter build appbundle --release
 ```
 
-`API_BASE` verilmezse geliştirme varsayılanları devreye girer (Android emülatör
-`http://10.0.2.2:3000/api`, diğerleri `http://127.0.0.1:3000/api`).
+Bu kutuplaşma bilinçli: bayrak unutulursa uygulama canlı API'ye bağlanır. Tersi olsaydı
+(varsayılan localhost) unutulan bir bayrak mağazaya hiç kimsede çalışmayan bir paket
+gönderirdi.
+
+Yerel sunucuya bağlanmak istersen ez:
+
+```bash
+flutter run --dart-define=API_BASE=http://10.0.2.2:3000/api      # Android emülatör
+flutter run --dart-define=API_BASE=http://127.0.0.1:3000/api     # iOS sim / masaüstü
+flutter run --dart-define=API_BASE=http://<PC_LAN_IP>:3000/api   # gerçek cihaz
+```
+
+Özel alan adına geçilirse yalnızca `kProductionApiBase` değişir.
 
 ## 5) Render'ı kapat
 

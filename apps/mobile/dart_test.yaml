@@ -1,0 +1,5 @@
+# `live` etiketli testler gerçek API'ye ağ isteği atar (api_contract_test.dart).
+# Çevrimdışı koşu:  flutter test --exclude-tags live
+# Yalnızca sözleşme: flutter test --tags live
+tags:
+  live:

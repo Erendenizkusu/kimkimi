@@ -4,4 +4,8 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Yerel sunucuya (http://10.0.2.2:3000) bağlanabilmek için düz HTTP.
+         Yalnızca debug derlemesinde birleştirilir; sürüm derlemesinde HTTPS zorunlu kalır. -->
+    <application android:usesCleartextTraffic="true" />
 </manifest>

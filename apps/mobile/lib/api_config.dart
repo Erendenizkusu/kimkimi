@@ -1,30 +1,24 @@
-import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+/// Canlı API — web uygulamasının kökü + `/api`.
+/// Özel alan adına geçilirse yalnızca burası değişir.
+const String kProductionApiBase = 'https://kimkimi.vercel.app/api';
 
-/// API artık web uygulamasının içinde (`apps/web/app/api/*`) — yani taban adres
-/// Next.js sunucusunun kökü + `/api`. Geliştirmede Next varsayılan olarak 3000'de.
+/// API taban adresi. **Varsayılan üretimdir**: bayrak unutulursa uygulama
+/// çalışmaya devam eder, mağazaya kırık paket gitmez.
 ///
-/// Üretim derlemesi:
-///   flutter build appbundle --dart-define=API_BASE=https://kimkimi.vercel.app/api
-/// Gerçek cihazda yerel sunucuya bağlanmak için:
-///   `flutter run --dart-define=API_BASE=http://<PC_LAN_IP>:3000/api`
-///
-/// `API_BASE` verilmezse:
-/// - Android: emülatörde bilgisayardaki sunucu için `10.0.2.2` (localhost değil).
-/// - iOS simülatör / masaüstü: `127.0.0.1` yeterli.
+/// Yerel sunucuya bağlanmak istersen bayrakla ez:
+///   Android emülatör : `--dart-define=API_BASE=http://10.0.2.2:3000/api`
+///   iOS sim / masaüstü: `--dart-define=API_BASE=http://127.0.0.1:3000/api`
+///   Gerçek cihaz      : `--dart-define=API_BASE=http://<PC_LAN_IP>:3000/api`
 String get kApiBase {
   const fromEnv = String.fromEnvironment('API_BASE', defaultValue: '');
-  if (fromEnv.isNotEmpty) return fromEnv.replaceAll(RegExp(r'/$'), '');
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-    return 'http://10.0.2.2:3000/api';
-  }
-  return 'http://127.0.0.1:3000/api';
+  if (fromEnv.isEmpty) return kProductionApiBase;
+  return fromEnv.replaceAll(RegExp(r'/$'), '');
 }
 
 /// Oda durumunun sunucudan çekilme sıklığı (eski socket.io yayınının yerine).
 const Duration kRoomPollInterval = Duration(seconds: 2);
 
-/// Web `public/media` GIF’leri için taban URL (örn. `http://10.0.2.2:3000`). Boşsa sonuç ekranında GIF kullanılmaz.
+/// Web `public/media` GIF’leri için taban URL. Boşsa sonuç ekranında GIF kullanılmaz.
 String get kWebPublicBase {
   const fromEnv = String.fromEnvironment('WEB_PUBLIC_BASE', defaultValue: '');
   if (fromEnv.isEmpty) return '';

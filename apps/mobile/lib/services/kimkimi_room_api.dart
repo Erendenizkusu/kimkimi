@@ -4,6 +4,12 @@ import '../api_config.dart';
 import '../kimkimi_http.dart';
 import '../models/public_question.dart';
 
+/// `POST /rooms` yanıtı.
+typedef CreatedRoom = ({String secretId, String shortCode, String hostPlayerToken});
+
+/// `POST /rooms/join` yanıtı.
+typedef JoinedRoom = ({String secretId, String guestPlayerToken});
+
 class KimKimiRoomApi {
   KimKimiRoomApi({required this.secretId, required this.playerToken});
 
@@ -12,16 +18,67 @@ class KimKimiRoomApi {
 
   Uri _u(String path) => Uri.parse('$kApiBase$path');
 
+  static Uri _url(String path) => Uri.parse('$kApiBase$path');
+
+  static const Map<String, String> _jsonHeaders = {'Content-Type': 'application/json'};
+
+  /// Oynanabilir kategoriler (yayınlanmış profil + eşlemeli oyun sorusu olanlar).
+  static Future<List<Map<String, dynamic>>> fetchCategories() async {
+    final r = await kimkimiGet(_url('/public/categories'));
+    if (!isOk2xx(r.statusCode)) {
+      throw StateException('Kategoriler alınamadı (${r.statusCode})', r.body, statusCode: r.statusCode);
+    }
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+  }
+
+  static Future<CreatedRoom> createRoom({
+    required String categoryId,
+    required String hostDisplayName,
+  }) async {
+    final r = await kimkimiPost(
+      _url('/rooms'),
+      headers: _jsonHeaders,
+      body: jsonEncode({'categoryId': categoryId, 'hostDisplayName': hostDisplayName}),
+    );
+    if (!isOk2xx(r.statusCode)) {
+      throw StateException('Oda açılamadı (${r.statusCode})', r.body, statusCode: r.statusCode);
+    }
+    final b = jsonDecode(r.body) as Map<String, dynamic>;
+    return (
+      secretId: b['secretId'] as String,
+      shortCode: b['shortCode'] as String,
+      hostPlayerToken: b['hostPlayerToken'] as String,
+    );
+  }
+
+  static Future<JoinedRoom> joinRoom({
+    required String shortCode,
+    required String guestDisplayName,
+  }) async {
+    final r = await kimkimiPost(
+      _url('/rooms/join'),
+      headers: _jsonHeaders,
+      body: jsonEncode({'shortCode': shortCode, 'guestDisplayName': guestDisplayName}),
+    );
+    if (!isOk2xx(r.statusCode)) {
+      throw StateException('Odaya katılınamadı (${r.statusCode})', r.body, statusCode: r.statusCode);
+    }
+    final b = jsonDecode(r.body) as Map<String, dynamic>;
+    return (
+      secretId: b['secretId'] as String,
+      guestPlayerToken: b['guestPlayerToken'] as String,
+    );
+  }
+
   Map<String, String> _authHeaders() => {
         'Authorization': 'Bearer $playerToken',
         'Content-Type': 'application/json',
       };
 
-  static bool _ok2xx(int code) => code >= 200 && code < 300;
-
   Future<Map<String, dynamic>> getState() async {
     final r = await kimkimiGet(_u('/rooms/$secretId/state'), headers: _authHeaders());
-    if (r.statusCode != 200) {
+    if (!isOk2xx(r.statusCode)) {
       throw StateException('Oda durumu alınamadı (${r.statusCode})', r.body, statusCode: r.statusCode);
     }
     return jsonDecode(r.body) as Map<String, dynamic>;
@@ -33,7 +90,7 @@ class KimKimiRoomApi {
       headers: _authHeaders(),
       body: jsonEncode({'answers': answers}),
     );
-    if (!_ok2xx(r.statusCode)) {
+    if (!isOk2xx(r.statusCode)) {
       throw StateException('Profil cevapları gönderilemedi (${r.statusCode})', r.body, statusCode: r.statusCode);
     }
   }
@@ -44,14 +101,14 @@ class KimKimiRoomApi {
       headers: _authHeaders(),
       body: jsonEncode({'questionId': questionId, 'value': value}),
     );
-    if (!_ok2xx(r.statusCode)) {
+    if (!isOk2xx(r.statusCode)) {
       throw StateException('Oyun cevabı gönderilemedi (${r.statusCode})', r.body, statusCode: r.statusCode);
     }
   }
 
   Future<dynamic> getResults() async {
     final r = await kimkimiGet(_u('/rooms/$secretId/results'), headers: _authHeaders());
-    if (r.statusCode != 200) {
+    if (!isOk2xx(r.statusCode)) {
       throw StateException('Sonuçlar alınamadı (${r.statusCode})', r.body, statusCode: r.statusCode);
     }
     return jsonDecode(r.body);
@@ -68,7 +125,7 @@ class KimKimiRoomApi {
       queryParameters: qp,
     );
     final r = await kimkimiGet(uri);
-    if (r.statusCode != 200) {
+    if (!isOk2xx(r.statusCode)) {
       throw StateException('Sorular yüklenemedi (${r.statusCode})', r.body, statusCode: r.statusCode);
     }
     final list = jsonDecode(r.body) as List<dynamic>;

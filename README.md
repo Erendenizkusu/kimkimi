@@ -46,7 +46,8 @@ npm run dev
 # 3. Admin panel (apps/admin) — port 3001
 cd apps/admin && cp .env.local.example .env.local && npm run dev
 
-# 4. Mobile client — point it at the web server
+# 4. Mobile client — defaults to the production API, so point it at your local
+#    server while developing
 cd apps/mobile
 flutter run --dart-define=API_BASE=http://10.0.2.2:3000/api   # Android emulator
 ```
@@ -56,9 +57,21 @@ Seeded admin (local): `admin@kimkimi.local` / `Admin123!`
 ### Tests
 
 ```bash
-cd apps/web    && npx tsc --noEmit && npm run build   # typecheck + build
-cd apps/admin  && npm run test:pw                     # Playwright (dev server up)
-cd apps/mobile && flutter analyze && flutter test     # analyze + widget/unit tests
+cd apps/web    && npm test && npx tsc --noEmit && npm run build
+cd apps/admin  && npm run test:pw                       # Playwright (dev server up)
+cd apps/mobile && flutter analyze && flutter test --exclude-tags live
+```
+
+`apps/web`'s `npm test` (Vitest) covers scoring — including the fuzzy text matching that
+decides whether two freely typed answers count as the same.
+
+`apps/mobile` also has an end-to-end contract test that plays a full game against a real
+server. It is tagged `live` and excluded above because it needs the network:
+
+```bash
+cd apps/mobile
+flutter test --tags live                                              # against production
+flutter test --tags live --dart-define=API_BASE=http://127.0.0.1:3000/api   # against local
 ```
 
 ## Deployment
@@ -70,7 +83,7 @@ Everything runs on free tiers, on a single vendor — see [`docs/DEPLOY.md`](doc
 | `apps/web` (site + API) | Vercel — root directory `apps/web` |
 | `apps/admin` | Vercel — root directory `apps/admin`, `API_URL` points at the web app's `/api` |
 | Postgres | Neon (scale-to-zero, resumes in about a second) |
-| `apps/mobile` | Play Store / App Store, built with `--dart-define=API_BASE=https://<domain>/api` |
+| `apps/mobile` | Play Store / App Store — the production API base is the default, so release builds need no extra flags |
 
 ## Tech stack
 

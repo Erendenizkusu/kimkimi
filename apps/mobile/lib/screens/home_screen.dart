@@ -1,10 +1,9 @@
-import 'dart:convert';
-
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
 import '../api_config.dart';
-import '../kimkimi_http.dart';
 import '../room_session_store.dart';
+import '../services/kimkimi_room_api.dart';
 import '../theme/theme_controller.dart';
 import '../user_facing_errors.dart';
 import '../widgets/category_room_tile.dart';
@@ -76,27 +75,29 @@ class _HomeScreenState extends State<HomeScreen> {
       _error = null;
     });
     try {
-      final r = await kimkimiGet(Uri.parse('$kApiBase/public/categories'));
+      final list = await KimKimiRoomApi.fetchCategories();
       if (!mounted) return;
-      if (r.statusCode != 200) {
-        setState(() {
-          _error = 'Sunucu ${r.statusCode}';
-          _loading = false;
-        });
-        return;
-      }
-      final list = jsonDecode(r.body) as List<dynamic>;
       setState(() {
-        _categories = list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        _categories = list;
         _loading = false;
       });
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = describeClientNetworkError(e);
+        _error = e is StateException
+            ? userFacingApiMessage(e.statusCode ?? 500, e.body)
+            : describeClientNetworkError(e);
         _loading = false;
       });
     }
+  }
+
+  /// API hatasını (StateException) ya da ağ hatasını kullanıcıya gösterir.
+  void _showApiError(Object e) {
+    final msg = e is StateException
+        ? userFacingApiMessage(e.statusCode ?? 500, e.body)
+        : describeClientNetworkError(e);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   Future<void> _createRoom(String categoryId) async {
@@ -107,23 +108,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (name == null || name.isEmpty) return;
 
-    final r = await kimkimiPost(
-      Uri.parse('$kApiBase/rooms'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'categoryId': categoryId, 'hostDisplayName': name}),
-    );
-    if (!mounted) return;
-    if (r.statusCode != 201) {
+    final CreatedRoom room;
+    try {
+      room = await KimKimiRoomApi.createRoom(categoryId: categoryId, hostDisplayName: name);
+    } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(userFacingApiMessage(r.statusCode, r.body))),
-      );
+      _showApiError(e);
       return;
     }
-    final body = jsonDecode(r.body) as Map<String, dynamic>;
-    final secretId = body['secretId'] as String;
-    final token = body['hostPlayerToken'] as String;
-    final shortCode = body['shortCode'] as String;
+    if (!mounted) return;
+    final secretId = room.secretId;
+    final token = room.hostPlayerToken;
+    final shortCode = room.shortCode;
     await RoomSessionStore.save(
       secretId: secretId,
       playerToken: token,
@@ -157,22 +153,17 @@ class _HomeScreenState extends State<HomeScreen> {
     if (code.isEmpty || guestName.isEmpty) return;
     if (!mounted) return;
 
-    final r = await kimkimiPost(
-      Uri.parse('$kApiBase/rooms/join'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'shortCode': code, 'guestDisplayName': guestName}),
-    );
-    if (!mounted) return;
-    if (r.statusCode != 201) {
+    final JoinedRoom room;
+    try {
+      room = await KimKimiRoomApi.joinRoom(shortCode: code, guestDisplayName: guestName);
+    } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(userFacingApiMessage(r.statusCode, r.body))),
-      );
+      _showApiError(e);
       return;
     }
-    final body = jsonDecode(r.body) as Map<String, dynamic>;
-    final secretId = body['secretId'] as String;
-    final token = body['guestPlayerToken'] as String;
+    if (!mounted) return;
+    final secretId = room.secretId;
+    final token = room.guestPlayerToken;
     await RoomSessionStore.save(
       secretId: secretId,
       playerToken: token,
@@ -378,22 +369,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'API: $kApiBase',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: scheme.outline,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Emülatörde sunucu bilgisayarda çalışmalı (apps/web, port 3000).',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
+                      // Hangi sunucuya gidildiği yalnızca geliştirme derlemesinde
+                      // gösterilir; mağaza sürümünde kullanıcıya anlamsız gelir.
+                      if (kDebugMode) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          'API: $kApiBase',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: scheme.outline,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                       const SizedBox(height: 24),
                       FilledButton.icon(
                         onPressed: _load,

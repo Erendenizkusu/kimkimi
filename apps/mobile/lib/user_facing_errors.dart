@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'api_config.dart';
-
 /// Tarayıcıdaki `describeClientFetchError` ile aynı mantık (Dart ağ hataları).
 String describeClientNetworkError(Object e) {
   if (e is TimeoutException) {
@@ -15,8 +13,7 @@ String describeClientNetworkError(Object e) {
       msg.contains('network is unreachable') ||
       msg.contains('connection refused') ||
       msg.contains('connection reset')) {
-    return 'Sunucuya ulaşılamıyor (ağ hatası). KimKimi API’nin çalıştığından emin ol. Uygulama şu adrese istek atıyor: $kApiBase. '
-        'Emülatörde web sunucusu bilgisayarda çalışmalı; gerçek cihazda `flutter run --dart-define=API_BASE=http://<PC_IP>:3000/api` kullan.';
+    return 'Sunucuya ulaşılamıyor. İnternet bağlantını kontrol edip tekrar dene.';
   }
   return e.toString();
 }
