@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 import { CATEGORY_SEED_DEFS, type QuestionPair } from './seed-data';
 import { CHOICE_FORMAT_UPGRADES } from './question-choice-upgrades';
+import { COMPARISON_UPGRADES } from './question-comparison-upgrades';
 import { OPEN_TEXT_PROMPTS } from './question-open-text-prompts';
 import { LEGACY_SEVGILI_PROFILE_PROMPTS } from './sevgili-pool';
 
@@ -159,6 +160,30 @@ async function main() {
   }
   if (openText > 0) {
     console.log(`Seed: ${openText} soru serbest metin (şıksız) olarak sabitlendi`);
+  }
+
+  // Kural B: yayındaki karşılaştırma sorularının oyun metnini alıntılı biçime çevir.
+  // (ensureQuestionPairsForCategory profil prompt'una bakıp atladığı için elle gerekiyor.)
+  let comparison = 0;
+  for (const u of COMPARISON_UPGRADES) {
+    const r = await prisma.question.updateMany({
+      where: { prompt: u.oldGamePrompt, phase: QuestionPhase.game },
+      data: {
+        prompt: u.newGamePrompt,
+        type: QuestionType.single_choice,
+        ...(u.choices ? { choicesJson: u.choices } : {}),
+      },
+    });
+    comparison += r.count;
+    if (u.choices) {
+      await prisma.question.updateMany({
+        where: { prompt: u.profilePrompt, phase: QuestionPhase.profile },
+        data: { type: QuestionType.single_choice, choicesJson: u.choices },
+      });
+    }
+  }
+  if (comparison > 0) {
+    console.log(`Seed: ${comparison} karşılaştırma sorusu alıntılı oyun metnine çevrildi`);
   }
 }
 

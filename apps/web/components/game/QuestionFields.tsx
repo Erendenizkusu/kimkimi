@@ -1,7 +1,7 @@
 'use client';
 
 import type { PublicQuestion } from '@/lib/types';
-import { parseChoices } from '@/lib/questions';
+import { MAX_ANSWER_WORDS, parseChoices } from '@/lib/questions';
 
 type Props = {
   questions: PublicQuestion[];
@@ -136,7 +136,7 @@ function Field({
       className={inputBase}
       value={typeof value === 'string' ? value : value == null ? '' : String(value)}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="En fazla 2 kelime"
+      placeholder={`En fazla ${MAX_ANSWER_WORDS} kelime`}
     />
   );
 }

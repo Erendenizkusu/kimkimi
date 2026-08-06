@@ -58,10 +58,14 @@ List<({String label, String value})> _parseChoices(dynamic raw) {
   return out;
 }
 
+/// Serbest metin cevaplarındaki kelime tavanı. Web karşılığı:
+/// `apps/web/lib/questions.ts` → `MAX_ANSWER_WORDS` (iki taraf aynı olmalı).
+const int kMaxAnswerWords = 4;
+
 int _wordCount(String s) =>
     s.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).length;
 
-bool _needsMaxTwoWords(PublicQuestion q) {
+bool _needsShortAnswer(PublicQuestion q) {
   if (q.type == 'number' || q.type == 'date' || q.type == 'multi_choice') return false;
   if (q.type == 'single_choice' && _parseChoices(q.choicesJson).isNotEmpty) return false;
   return true;
@@ -539,13 +543,13 @@ class _ProfileBodyState extends State<_ProfileBody> {
         );
         return;
       }
-      if (_needsMaxTwoWords(q)) {
+      if (_needsShortAnswer(q)) {
         final s = v is String ? v.trim() : v.toString().trim();
-        if (_wordCount(s) > 2) {
+        if (_wordCount(s) > kMaxAnswerWords) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                '«${q.prompt}»: Metin cevapları en fazla 2 kelime olsun (tahmin doğruluğu için).',
+                '«${q.prompt}»: Metin cevapları en fazla $kMaxAnswerWords kelime olsun (tahmin doğruluğu için).',
               ),
             ),
           );
@@ -664,7 +668,7 @@ class _QuestionField extends StatelessWidget {
             q.prompt,
             _StableTextField(
               key: ValueKey('sc-fallback-${q.id}'),
-              hint: 'En fazla 2 kelime',
+              hint: 'En fazla $kMaxAnswerWords kelime',
               initial: value?.toString() ?? '',
               onChanged: onChanged,
             ),
@@ -779,7 +783,7 @@ class _QuestionField extends StatelessWidget {
           q.prompt,
           _StableTextField(
             key: ValueKey('t-${q.id}'),
-            hint: 'En fazla 2 kelime',
+            hint: 'En fazla $kMaxAnswerWords kelime',
             initial: value?.toString() ?? '',
             onChanged: onChanged,
           ),
@@ -900,12 +904,12 @@ class _PlayingBodyState extends State<_PlayingBody> {
       );
       return;
     }
-    if (_needsMaxTwoWords(q)) {
+    if (_needsShortAnswer(q)) {
       final s = _value is String ? (_value as String).trim() : _value.toString().trim();
-      if (_wordCount(s) > 2) {
+      if (_wordCount(s) > kMaxAnswerWords) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Metin cevabı en fazla 2 kelime olmalı.'),
+            content: Text('Metin cevabı en fazla $kMaxAnswerWords kelime olmalı.'),
           ),
         );
         return;

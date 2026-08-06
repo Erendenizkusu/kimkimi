@@ -1,5 +1,6 @@
 import { QuestionType } from '@prisma/client';
 
+import { comparisonPair } from './comparison-pair';
 import type { TypedQuestionPair } from './sevgili-pool';
 
 /**
@@ -99,12 +100,12 @@ export const ARKADAS_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Arkadaşın en çok hangi konuda üşengeçlik yapar?',
     type: QuestionType.text,
   },
-  {
-    profile: 'Ortak bir işe girseniz işi kim batırır?',
-    game: 'Ortak bir işe girseniz işi kim batırır? (arkadaşının cevabı)',
-    type: QuestionType.single_choice,
-    choices: ['O (arkadaşın)', 'Ben', 'İkimiz de eşit', 'Kimse batırmaz'],
-  },
+  comparisonPair('Arkadaşın', 'Ortak bir işe girseniz işi kim batırır?', [
+    'Ben',
+    'O',
+    'İkimiz de eşit',
+    'Kimse batırmaz',
+  ]),
   {
     profile: 'Mesajlaşmayı mı seversin, aramayı mı?',
     game: 'Arkadaşın mesajlaşmayı mı sever, aramayı mı?',
@@ -180,10 +181,110 @@ export const ARKADAS_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Arkadaşının bu soru için yazdığı tek kelime neydi?',
     type: QuestionType.text,
   },
+  comparisonPair('Arkadaşın', 'Karşı cinsle konuşurken sen mi daha özgüvenlisin, o mu?', [
+    'Ben',
+    'O',
+    'Eşit',
+    'İkisi de değil / duruma bağlı',
+  ]),
+
+  // ——— 2026-08 genişletme: ortak geçmiş ———
   {
-    profile: 'Karşı cinsle konuşurken sen mi daha özgüvenlisin, o mu?',
-    game: 'Karşı cins ile konuşma konusunda kim daha özgüvenli? (arkadaşının cevabı)',
+    profile: 'Onunla ilgili ilk izlenimin neydi?',
+    game: 'Arkadaşının seninle ilgili ilk izlenimi neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'İkinizle ilgili en komik anınız hangisi?',
+    game: 'Arkadaşına göre ikinizin en komik anı hangisi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Hiç küstünüz mü? Sebebi neydi?',
+    game: 'Arkadaşına göre hiç küstünüz mü, sebebi neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Sadece ikinizin anladığı bir espriniz var mı? Ne?',
+    game: 'Arkadaşına göre sadece ikinizin anladığı espri ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Beraber tatile çıksanız nereye giderdiniz?',
+    game: 'Arkadaşına göre beraber tatile çıksanız nereye giderdiniz?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Onu üç kelimeyle anlatsan hangileri olurdu?',
+    game: 'Arkadaşın seni üç kelimeyle anlatsa hangileri olurdu?',
+    type: QuestionType.text,
+  },
+
+  // ——— Hanginiz? ———
+  comparisonPair('Arkadaşın', 'Daha dışa dönük olan hanginiz?'),
+  comparisonPair('Arkadaşın', 'Parayı daha iyi idare eden hanginiz?'),
+  comparisonPair('Arkadaşın', 'Daha iyi yemek yapan hanginiz?'),
+  comparisonPair('Arkadaşın', 'Daha iyi araba kullanan hanginiz?'),
+  comparisonPair('Arkadaşın', 'Daha iyi dans eden hanginiz?'),
+  comparisonPair('Arkadaşın', 'Daha çok dedikodu yapan hanginiz?'),
+  comparisonPair('Arkadaşın', 'Zombi kıyametinde daha uzun hayatta kalacak olan hanginiz?'),
+  comparisonPair('Arkadaşın', 'İkinizden hangisi daha sinir bozucu?'),
+  comparisonPair('Arkadaşın', 'Hanginiz daha çok geç kalır?'),
+  comparisonPair('Arkadaşın', 'Ünlü olma ihtimali daha yüksek olan hanginiz?'),
+  comparisonPair('Arkadaşın', 'Film izlerken ilk uyuyakalan hanginiz?'),
+
+  // ——— Kişisel gerçekler ———
+  {
+    profile: 'En büyük korkun ne?',
+    game: 'Arkadaşının en büyük korkusu ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Gizli yeteneğin ne?',
+    game: 'Arkadaşının gizli yeteneği ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Hayalindeki meslek ne?',
+    game: 'Arkadaşının hayalindeki meslek ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'İlk işin neydi?',
+    game: 'Arkadaşının ilk işi neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Hazırlanman ne kadar sürer?',
+    game: 'Arkadaşının hazırlanması ne kadar sürer?',
     type: QuestionType.single_choice,
-    choices: ['Ben', 'O (arkadaşın)', 'Eşit', 'İkisi de değil / duruma bağlı'],
+    choices: ['10 dakikadan az', '10–30 dakika', '30–60 dakika', '1 saatten fazla'],
+  },
+  {
+    profile: 'Odanda yılan mı bulmayı tercih edersin, örümcek mi?',
+    game: 'Arkadaşın odasında yılan mı bulmayı tercih eder, örümcek mi?',
+    type: QuestionType.single_choice,
+    choices: ['Yılan', 'Örümcek'],
+  },
+  {
+    profile: 'Rahat kıyafet mi seversin, şık giyinmeyi mi?',
+    game: 'Arkadaşın rahat kıyafet mi sever, şık giyinmeyi mi?',
+    type: QuestionType.single_choice,
+    choices: ['Rahat', 'Şık', 'Duruma göre'],
+  },
+  {
+    profile: 'Dövme yaptırsan ne yaptırırdın?',
+    game: 'Arkadaşın dövme yaptırsa ne yaptırırdı?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'En utanç verici anın neydi?',
+    game: 'Arkadaşının en utanç verici anı neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Doğum günü hediyesi olarak ne isterdin?',
+    game: 'Arkadaşın doğum günü hediyesi olarak ne isterdi?',
+    type: QuestionType.text,
   },
 ];

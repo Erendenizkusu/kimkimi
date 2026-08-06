@@ -16,7 +16,7 @@ import {
 } from '@/lib/api';
 import { getApiUrl } from '@/lib/config';
 import { WEB_MEDIA } from '@/lib/webMedia';
-import { needsMaxTwoWords, sortQuestions, wordCount } from '@/lib/questions';
+import { MAX_ANSWER_WORDS, needsShortAnswer, sortQuestions, wordCount } from '@/lib/questions';
 import { clearRoomSession, loadRoomSession, type RoomSession } from '@/lib/roomSession';
 import type { PublicQuestion } from '@/lib/types';
 
@@ -206,12 +206,12 @@ export default function RoomClient({ secretId }: { secretId: string }) {
         setToast({ kind: 'error', message: `«${q.prompt}» için en az bir seçenek işaretle.` });
         return;
       }
-      if (needsMaxTwoWords(q)) {
+      if (needsShortAnswer(q)) {
         const s = typeof v === 'string' ? v.trim() : String(v).trim();
-        if (wordCount(s) > 2) {
+        if (wordCount(s) > MAX_ANSWER_WORDS) {
           setToast({
             kind: 'error',
-            message: `«${q.prompt}»: Metin cevapları en fazla 2 kelime olsun.`,
+            message: `«${q.prompt}»: Metin cevapları en fazla ${MAX_ANSWER_WORDS} kelime olsun.`,
           });
           return;
         }
@@ -235,10 +235,10 @@ export default function RoomClient({ secretId }: { secretId: string }) {
       setToast({ kind: 'error', message: 'Önce bir cevap seç veya yaz.' });
       return;
     }
-    if (needsMaxTwoWords(currentGameQ)) {
+    if (needsShortAnswer(currentGameQ)) {
       const s = typeof gameVal === 'string' ? gameVal.trim() : String(gameVal).trim();
-      if (wordCount(s) > 2) {
-        setToast({ kind: 'error', message: 'Metin cevabı en fazla 2 kelime olmalı.' });
+      if (wordCount(s) > MAX_ANSWER_WORDS) {
+        setToast({ kind: 'error', message: `Metin cevabı en fazla ${MAX_ANSWER_WORDS} kelime olmalı.` });
         return;
       }
     }

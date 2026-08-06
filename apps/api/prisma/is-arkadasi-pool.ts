@@ -1,5 +1,6 @@
 import { QuestionType } from '@prisma/client';
 
+import { comparisonPair } from './comparison-pair';
 import type { TypedQuestionPair } from './sevgili-pool';
 
 /**
@@ -180,12 +181,13 @@ export const IS_ARKADASI_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Rakibinin networking açılışı ne?',
     type: QuestionType.text,
   },
-  {
-    profile: 'Görev paylaşımında “en zor parça” genelde kime kalır?',
-    game: 'Rakibinin görev paylaşımında zor parça kime kalır?',
-    type: QuestionType.single_choice,
-    choices: ['Ben', 'O', 'Eşit bölüşülür', 'Gönüllü çıkarız', 'Yöneticiye sorulur'],
-  },
+  comparisonPair('Rakibin', 'Görev paylaşımında “en zor parça” genelde kime kalır?', [
+    'Ben',
+    'O',
+    'Eşit bölüşülür',
+    'Gönüllü çıkarız',
+    'Yöneticiye sorulur',
+  ]),
   {
     profile: 'İş çıkışı toplu taşımada en çok ne yaparsın?',
     game: 'Rakibinin iş çıkışı yolculukta yaptığı şey ne?',
@@ -208,10 +210,140 @@ export const IS_ARKADASI_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Rakibinin kötü haber verme stratejisi ne?',
     type: QuestionType.text,
   },
+  comparisonPair('Rakibin', 'İş arkadaşınla tartışınca barışı ilk kim getirir?', [
+    'Ben',
+    'O',
+    'Zamanla düzelir',
+    'Üçüncü biri',
+    'Soğuk savaş',
+  ]),
+
+  // ——— 2026-08 genişletme: kariyer geçmişi + ofis dışı kişi ———
   {
-    profile: 'İş arkadaşınla tartışınca barışı ilk kim getirir?',
-    game: 'Rakibinin iş tartışmasında barışı kim getirir?',
+    profile: 'Buraya gelmeden önceki işin neydi?',
+    game: 'Rakibinin buraya gelmeden önceki işi neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Üniversitede ne okudun?',
+    game: 'Rakibi üniversitede ne okudu?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Hayatındaki ilk iş neydi?',
+    game: 'Rakibinin hayatındaki ilk iş neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Kaç dil konuşuyorsun?',
+    game: 'Rakibin kaç dil konuşuyor?',
+    type: QuestionType.number,
+  },
+  {
+    profile: 'Çalışırken ne dinlersin?',
+    game: 'Rakibin çalışırken ne dinler?',
     type: QuestionType.single_choice,
-    choices: ['Ben', 'O', 'Zamanla düzelir', 'Üçüncü biri', 'Soğuk savaş'],
+    choices: ['Müzik', 'Podcast', 'Enstrümantal', 'Sessizlik', 'Ofis gürültüsü'],
+  },
+  {
+    profile: 'Hangi kahveyi tercih edersin?',
+    game: 'Rakibin hangi kahveyi tercih eder?',
+    type: QuestionType.single_choice,
+    choices: ['Türk kahvesi', 'Espresso', 'Latte', 'Americano', 'Filtre kahve', 'Kahve içmem'],
+  },
+  {
+    profile: 'Masanda olmazsa olmaz eşyan ne?',
+    game: 'Rakibinin masasında olmazsa olmaz eşyası ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Öğle yemeğini nasıl yersin?',
+    game: 'Rakibin öğle yemeğini nasıl yer?',
+    type: QuestionType.single_choice,
+    choices: ['Tek başıma', 'Ekiple', 'Masamda çalışarak', 'Yemek yemem'],
+  },
+  {
+    profile: 'Dört günlük hafta mı, tam uzaktan çalışma mı?',
+    game: 'Rakibin dört günlük haftayı mı seçer, tam uzaktan çalışmayı mı?',
+    type: QuestionType.single_choice,
+    choices: ['Dört günlük hafta', 'Tam uzaktan', 'İkisi de olmasın'],
+  },
+  {
+    profile: 'İşinin en zor tarafı ne?',
+    game: 'Rakibinin işinin en zor tarafı ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'İşinde bir şeyi değiştirebilsen ne olurdu?',
+    game: 'Rakibin işinde bir şeyi değiştirebilse ne olurdu?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Meslekte örnek aldığın kişi kim?',
+    game: 'Rakibinin meslekte örnek aldığı kişi kim?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Bu işi yapmasan hangi mesleği seçerdin?',
+    game: 'Rakibin bu işi yapmasa hangi mesleği seçerdi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Hafta sonu hobin ne?',
+    game: 'Rakibinin hafta sonu hobisi ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Gitmek istediğin bir sonraki yer neresi?',
+    game: 'Rakibinin gitmek istediği bir sonraki yer neresi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ofiste en çok hangi atıştırmalığa uzanırsın?',
+    game: 'Rakibin ofiste en çok hangi atıştırmalığa uzanır?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Çocukken ne olmak istiyordun?',
+    game: 'Rakibin çocukken ne olmak istiyordu?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Okulda en sevdiğin ders hangisiydi?',
+    game: 'Rakibinin okulda en sevdiği ders hangisiydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Okulda en zorlandığın ders hangisiydi?',
+    game: 'Rakibinin okulda en zorlandığı ders hangisiydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Kariyerindeki en büyük dönüm noktası neydi?',
+    game: 'Rakibinin kariyerindeki en büyük dönüm noktası neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Toplantı için en sevdiğin gün hangisi?',
+    game: 'Rakibinin toplantı için en sevdiği gün hangisi?',
+    type: QuestionType.single_choice,
+    choices: ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Hiçbiri'],
+  },
+  {
+    profile: 'Görev almak için gönüllü olur musun, seçilmeyi mi beklersin?',
+    game: 'Rakibin görev almak için gönüllü olur mu, seçilmeyi mi bekler?',
+    type: QuestionType.single_choice,
+    choices: ['Gönüllü olurum', 'Beklerim', 'Duruma göre'],
+  },
+  {
+    profile: 'İş arkadaşlarınla mesai dışı görüşür müsün?',
+    game: 'Rakibin iş arkadaşlarıyla mesai dışı görüşür mü?',
+    type: QuestionType.single_choice,
+    choices: ['Sık sık', 'Ara sıra', 'Nadiren', 'Hiç'],
+  },
+  {
+    profile: 'Emekli olsan ilk ne yapardın?',
+    game: 'Rakibin emekli olsa ilk ne yapardı?',
+    type: QuestionType.text,
   },
 ];

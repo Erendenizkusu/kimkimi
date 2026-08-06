@@ -1,5 +1,6 @@
 import { QuestionType } from '@prisma/client';
 
+import { comparisonPair } from './comparison-pair';
 import type { TypedQuestionPair } from './sevgili-pool';
 
 /**
@@ -93,12 +94,12 @@ export const AILE_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Diğer oyuncunun en çok şımartılan torun dediği kim?',
     type: QuestionType.text,
   },
-  {
-    profile: 'Annen (veya ebeveynin) hangi çocuğuna daha çok kıyamaz? (sence)',
-    game: 'Diğer oyuncunun ebeveyn kimin yanında yumuşar dediği kim?',
-    type: QuestionType.single_choice,
-    choices: ['Ben', 'O', 'Eşit / duruma göre', 'Başka bir kardeş / aile üyesi'],
-  },
+  comparisonPair('Diğer oyuncu', 'Annen (veya ebeveynin) hangi çocuğuna daha çok kıyamaz? (sence)', [
+    'Ben',
+    'O',
+    'Eşit / duruma göre',
+    'Başka bir kardeş / aile üyesi',
+  ]),
   {
     profile: 'Misafir geleceği zaman ilk stres olduğun konu ne?',
     game: 'Diğer oyuncunun misafir öncesi ilk stresi ne olur?',
@@ -236,12 +237,13 @@ export const AILE_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Diğer oyuncunun çocukluk yazlarını en çok nerede geçirdiği nedir?',
     type: QuestionType.text,
   },
-  {
-    profile: 'Aile içinde parayı en iyi idare eden sence kim?',
-    game: 'Diğer oyuncunun en cömert veya en idareli dediği kim?',
-    type: QuestionType.single_choice,
-    choices: ['Ben', 'O', 'Anne', 'Baba', 'Başka biri / ortak karar'],
-  },
+  comparisonPair('Diğer oyuncu', 'Aile içinde parayı en iyi idare eden sence kim?', [
+    'Ben',
+    'O',
+    'Anne',
+    'Baba',
+    'Başka biri / ortak karar',
+  ]),
   {
     profile: 'Hastayken seni en çok kim şımartırdı?',
     game: 'Diğer oyuncuyu hastayken en çok kim şımartırdı?',
@@ -253,12 +255,13 @@ export const AILE_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Diğer oyuncunun anne eli dediği koku veya lezzet hangisi?',
     type: QuestionType.text,
   },
-  {
-    profile: 'Aile içi kavgada barışı ilk kim getirirdi?',
-    game: 'Diğer oyuncunun evde barışı ilk getiren kim olduğunu düşünüyor?',
-    type: QuestionType.single_choice,
-    choices: ['Anne', 'Baba', 'Ben', 'O', 'Susup geçen olurdu'],
-  },
+  comparisonPair('Diğer oyuncu', 'Aile içi kavgada barışı ilk kim getirirdi?', [
+    'Anne',
+    'Baba',
+    'Ben',
+    'O',
+    'Susup geçen olurdu',
+  ]),
   {
     profile: 'Çocukken en çok hangi odayı senin köşen sayardın?',
     game: 'Diğer oyuncunun çocukken en çok sahiplendiği köşe neresiydi?',
@@ -274,6 +277,144 @@ export const AILE_TYPED_PAIRS: TypedQuestionPair[] = [
   {
     profile: 'Aile içinde gizli şampiyon olduğun şey ne? (kimse bilmez sandığın)',
     game: 'Diğer oyuncunun aile içinde gizli güçlü olduğu alan ne?',
+    type: QuestionType.text,
+  },
+
+  // ——— 2026-08 genişletme ———
+  {
+    profile: 'İlk kelimen neydi?',
+    game: 'Diğer oyuncunun ilk kelimesi neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ailede en çok kime benzediğin söylenir?',
+    game: 'Diğer oyuncunun ailede en çok kime benzediği söylenir?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Okulda en kötü olduğun ders hangisiydi?',
+    game: 'Diğer oyuncunun okulda en kötü olduğu ders hangisiydi?',
+    type: QuestionType.single_choice,
+    choices: ['Matematik', 'Fen bilimleri', 'Türkçe', 'Sosyal bilgiler', 'Yabancı dil', 'Beden eğitimi', 'Resim / Müzik'],
+  },
+  {
+    profile: 'En sevdiğin öğretmenin kimdi?',
+    game: 'Diğer oyuncunun en sevdiği öğretmen kimdi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ehliyeti kaçıncı denemede aldın?',
+    game: 'Diğer oyuncu ehliyeti kaçıncı denemede aldı?',
+    type: QuestionType.number,
+  },
+  {
+    profile: 'Hangi ev işinde berbatsın?',
+    game: 'Diğer oyuncu hangi ev işinde berbattır?',
+    type: QuestionType.single_choice,
+    choices: ['Bulaşık', 'Ütü', 'Yemek', 'Toz alma', 'Çamaşır', 'Hiçbiri'],
+  },
+  {
+    profile: 'Acil bir durumda ailede ilk kimi ararsın?',
+    game: 'Diğer oyuncu acil bir durumda ailede ilk kimi arar?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Kriz anında ailede sana en çok kim destek olur?',
+    game: 'Kriz anında diğer oyuncuya ailede en çok kim destek olur?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Çocukken hayali bir arkadaşın var mıydı?',
+    game: 'Diğer oyuncunun çocukken hayali bir arkadaşı var mıydı?',
+    type: QuestionType.single_choice,
+    choices: ['Evet', 'Hayır', 'Hatırlamıyorum'],
+  },
+  {
+    profile: 'Hiç kemiğin kırıldı mı? Hangisi?',
+    game: 'Diğer oyuncunun hiç kemiği kırıldı mı, hangisi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Bilinen bir alerjin var mı?',
+    game: 'Diğer oyuncunun bilinen bir alerjisi var mı?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Aile büyüklerinden en çok hangi hikâye anlatılır?',
+    game: 'Diğer oyuncuya göre aile büyüklerinden en çok hangi hikâye anlatılır?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Çocukken seni en çok ne sinirlendirirdi?',
+    game: 'Diğer oyuncuyu çocukken en çok ne sinirlendirirdi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Şu ana kadar en gurur duyduğun şey ne?',
+    game: 'Diğer oyuncunun şu ana kadar en gurur duyduğu şey ne?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Kararlarını mantığınla mı verirsin, duygularınla mı?',
+    game: 'Diğer oyuncu kararlarını mantığıyla mı verir, duygularıyla mı?',
+    type: QuestionType.single_choice,
+    choices: ['Mantık', 'Duygu', 'Yarı yarıya'],
+  },
+  {
+    profile: 'Beş yıl sonra kendini nerede görüyorsun?',
+    game: 'Diğer oyuncu beş yıl sonra kendini nerede görüyor?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ailecek en çok hangi bayramı severdiniz?',
+    game: 'Diğer oyuncuya göre ailecek en çok hangi bayram severdiniz?',
+    type: QuestionType.single_choice,
+    choices: ['Ramazan Bayramı', 'Kurban Bayramı', 'Yılbaşı', 'Doğum günleri', 'Hiçbiri'],
+  },
+  {
+    profile: 'Çocukken evde en çok hangi çizgi filmi izlerdin?',
+    game: 'Diğer oyuncu çocukken evde en çok hangi çizgi filmi izlerdi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ailenle en son ne zaman tatile çıktınız?',
+    game: 'Diğer oyuncu ailesiyle en son ne zaman tatile çıktı?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Çocukken en sevdiğin ev yemeği hangisiydi?',
+    game: 'Diğer oyuncunun çocukken en sevdiği ev yemeği hangisiydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Çocukken en sevmediğin yemek neydi?',
+    game: 'Diğer oyuncunun çocukken en sevmediği yemek neydi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ailede en iyi araba kullanan kim?',
+    game: 'Diğer oyuncuya göre ailede en iyi araba kullanan kim?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Aile toplantılarında en çok hangi konu tartışılır?',
+    game: 'Diğer oyuncuya göre aile toplantılarında en çok hangi konu tartışılır?',
+    type: QuestionType.single_choice,
+    choices: ['Siyaset', 'Evlilik / çocuk', 'Para', 'Futbol', 'Komşular', 'Sağlık'],
+  },
+  {
+    profile: 'Kaç yaşında ilk kez uçağa bindin?',
+    game: 'Diğer oyuncu kaç yaşında ilk kez uçağa bindi?',
+    type: QuestionType.number,
+  },
+  {
+    profile: 'Ailede sana en çok kim benzer?',
+    game: 'Diğer oyuncuya ailede en çok kim benzer?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Ailede hayır demeyi en iyi bilen kim?',
+    game: 'Diğer oyuncuya göre ailede hayır demeyi en iyi bilen kim?',
     type: QuestionType.text,
   },
 ];

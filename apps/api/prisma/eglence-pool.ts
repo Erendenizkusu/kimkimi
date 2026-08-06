@@ -1,5 +1,6 @@
 import { QuestionType } from '@prisma/client';
 
+import { comparisonPair } from './comparison-pair';
 import type { TypedQuestionPair } from './sevgili-pool';
 
 /**
@@ -151,12 +152,12 @@ export const EGLENCE_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Rakibinin yılbaşı modunu tek kelimeyle nasıl tarif edersin?',
     type: QuestionType.text,
   },
-  {
-    profile: 'Partide tanımadığın biriyle sohbeti kim başlatır?',
-    game: 'Rakibinin tanımadığı biriyle sohbeti kim başlatır?',
-    type: QuestionType.single_choice,
-    choices: ['Ben', 'O', 'Üçüncü biri', 'Kimse / utangaç kalırız'],
-  },
+  comparisonPair('Rakibin', 'Partide tanımadığın biriyle sohbeti kim başlatır?', [
+    'Ben',
+    'O',
+    'Üçüncü biri',
+    'Kimse / utangaç kalırız',
+  ]),
   {
     profile: 'Piknik veya bahçe partisinde vazgeçilmezin ne?',
     game: 'Rakibinin açık hava partisinde vazgeçilmezi ne?',
@@ -194,5 +195,69 @@ export const EGLENCE_TYPED_PAIRS: TypedQuestionPair[] = [
     game: 'Rakibinin dress code’a uyumu nasıl olur?',
     type: QuestionType.single_choice,
     choices: ['Tam uyarım', 'Yorumlarım', 'Umursamam', 'Son dakika panik', 'Aşırı yaparım'],
+  },
+
+  // ——— 2026-08 genişletme: “Kim Daha” formatı ———
+  comparisonPair('Rakibin', 'Partiden ilk kim ayrılır?'),
+  comparisonPair('Rakibin', 'Partide en çok fotoğraf çeken hanginiz?'),
+  comparisonPair('Rakibin', 'Telefonunu kaybetme ihtimali daha yüksek olan hanginiz?'),
+  comparisonPair('Rakibin', 'Ortamda ilk dans pistine çıkan hanginiz?'),
+  comparisonPair('Rakibin', 'Daha iyi hikâye anlatan hanginiz?'),
+  comparisonPair('Rakibin', 'Gece bitmeden uyuyakalan hanginiz?'),
+  comparisonPair('Rakibin', 'Sır tutma konusunda daha kötü olan hanginiz?'),
+  comparisonPair('Rakibin', 'Yanlış anda gülen hanginiz?'),
+  comparisonPair('Rakibin', 'Toplum içinde utanç verici bir şey yapma ihtimali kimde?'),
+  comparisonPair('Rakibin', 'Bir yarışma programına çıkma ihtimali daha yüksek olan hanginiz?'),
+  comparisonPair('Rakibin', 'Bütün parasını saçma bir şeye harcayacak olan hanginiz?'),
+  comparisonPair('Rakibin', 'Ünlü olma ihtimali daha yüksek olan hanginiz?'),
+  comparisonPair('Rakibin', 'Sabaha kadar ayakta kalabilecek olan hanginiz?'),
+  comparisonPair('Rakibin', 'Karaoke mikrofonunu bırakmayan hanginiz?'),
+  comparisonPair('Rakibin', 'Şoförlüğü üstlenen hanginiz?'),
+  comparisonPair('Rakibin', 'Hesabı ilk isteyen hanginiz?'),
+  comparisonPair('Rakibin', 'Partide tanımadığı biriyle bir saat sohbet edecek olan hanginiz?'),
+  comparisonPair('Rakibin', 'Ertesi gün geceyi hatırlamayan hanginiz?'),
+
+  // ——— Eğlence tercihleri ———
+  {
+    profile: 'Bir konser bileti kazansan hangi sanatçıya giderdin?',
+    game: 'Rakibin bir konser bileti kazansa hangi sanatçıya giderdi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Gece planı bozulunca B planın ne olur?',
+    game: 'Rakibinin gece planı bozulunca B planı ne olur?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'En sevdiğin içecek hangisi?',
+    game: 'Rakibinin en sevdiği içecek hangisi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Grup fotoğrafında genelde nerede durursun?',
+    game: 'Rakibin grup fotoğrafında genelde nerede durur?',
+    type: QuestionType.single_choice,
+    choices: ['En önde ortada', 'Kenarda', 'Arka sırada', 'Fotoğrafı ben çekerim'],
+  },
+  {
+    profile: 'Gece kaçta eve dönmüş olmayı seversin?',
+    game: 'Rakibin gece kaçta eve dönmüş olmayı sever?',
+    type: QuestionType.single_choice,
+    choices: ['00:00’dan önce', '00:00–02:00', '02:00–04:00', 'Güneş doğunca'],
+  },
+  {
+    profile: 'Grup oyunlarında en iyi olduğun oyun hangisi?',
+    game: 'Rakibinin grup oyunlarında en iyi olduğu oyun hangisi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Bir günlüğüne bir ünlüyle hayat değiştirsen kim olurdun?',
+    game: 'Rakibin bir günlüğüne bir ünlüyle hayat değiştirse kim olurdu?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Partiye giderken vazgeçilmezin ne?',
+    game: 'Rakibinin partiye giderken vazgeçilmezi ne?',
+    type: QuestionType.text,
   },
 ];

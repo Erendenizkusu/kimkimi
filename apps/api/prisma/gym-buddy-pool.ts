@@ -203,4 +203,71 @@ export const GYM_BUDDY_TYPED_PAIRS: TypedQuestionPair[] = [
     type: QuestionType.single_choice,
     choices: ['Gelişim için', 'Karşı cins için', 'İkisi de'],
   },
+
+  // ——— 2026-08 genişletme: salon kültürü & alışkanlık ———
+  {
+    profile: 'Antrenman listendeki bir numaralı şarkı hangisi?',
+    game: 'Arkadaşının antrenman listesindeki bir numaralı şarkı hangisi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Kaçamak öğününde ne yersin?',
+    game: 'Arkadaşın kaçamak öğününde ne yer?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Günlük protein hedefin kaç gram?',
+    game: 'Arkadaşının günlük protein hedefi kaç gram?',
+    type: QuestionType.number,
+  },
+  {
+    profile: 'Haftada kaç gün dinlenirsin?',
+    game: 'Arkadaşın haftada kaç gün dinlenir?',
+    type: QuestionType.number,
+  },
+  {
+    profile: 'Aç karnına mı antrenman yaparsın, yemek yiyip mi?',
+    game: 'Arkadaşın aç karnına mı antrenman yapar, yemek yiyip mi?',
+    type: QuestionType.single_choice,
+    choices: ['Aç karnına', 'Yemek yiyip', 'Fark etmez'],
+  },
+  {
+    profile: 'Antrenmanda eldiven kullanır mısın?',
+    game: 'Arkadaşın antrenmanda eldiven kullanır mı?',
+    type: QuestionType.single_choice,
+    choices: ['Kullanırım', 'Kullanmam', 'Bazen'],
+  },
+  {
+    profile: 'Takip ettiğin bir spor içerik üreticisi var mı? Kim?',
+    game: 'Arkadaşının takip ettiği spor içerik üreticisi kim?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Şu an hangi rekorun peşindesin?',
+    game: 'Arkadaşın şu an hangi rekorun peşinde?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Hiç sakatlandın mı? Neresi?',
+    game: 'Arkadaşın hiç sakatlandı mı, neresi?',
+    type: QuestionType.text,
+  },
+  {
+    profile: 'Antrenmandan sonra ilk ne yaparsın?',
+    game: 'Arkadaşın antrenmandan sonra ilk ne yapar?',
+    type: QuestionType.single_choice,
+    choices: ['Protein içerim', 'Duş', 'Yemek', 'Uyurum', 'İşe / okula giderim'],
+  },
+  {
+    profile: 'Salonda kiminle çalışmayı seversin?',
+    game: 'Arkadaşın salonda kiminle çalışmayı sever?',
+    type: QuestionType.single_choice,
+    choices: ['Tek başıma', 'Partnerle', 'Grup dersinde', 'Antrenörle'],
+  },
+  {
+    profile: 'Tatilde antrenmana devam eder misin?',
+    game: 'Arkadaşın tatilde antrenmana devam eder mi?',
+    type: QuestionType.single_choice,
+    choices: ['Ederim', 'Etmem', 'Hafifletirim'],
+  },
 ];

@@ -24,7 +24,14 @@ export function wordCount(s: string): number {
     .filter(Boolean).length;
 }
 
-export function needsMaxTwoWords(q: PublicQuestion): boolean {
+/**
+ * Serbest metin cevaplarındaki kelime tavanı. Tahmin eşleşmesi kısa cevaplarda
+ * çalışıyor; "Hiç kemiğin kırıldı mı? Hangisi?" gibi sorular 2 kelimeye sığmadığı
+ * için 4'e çıkarıldı. Mobil karşılığı: `room_screen.dart` → `kMaxAnswerWords`.
+ */
+export const MAX_ANSWER_WORDS = 4;
+
+export function needsShortAnswer(q: PublicQuestion): boolean {
   if (q.type === 'number' || q.type === 'date' || q.type === 'multi_choice') return false;
   if (q.type === 'single_choice' && parseChoices(q.choicesJson).length > 0) return false;
   return true;
