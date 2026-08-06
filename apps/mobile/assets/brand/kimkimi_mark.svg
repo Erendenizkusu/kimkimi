@@ -1,15 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="kkMarkTitle">
   <title id="kkMarkTitle">KimKimi</title>
-  <defs>
-    <linearGradient id="kkGrad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+  <defs><linearGradient id="kkGrad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
     <stop stop-color="#5b21b6"/>
     <stop offset="0.45" stop-color="#9333ea"/>
-    <stop offset="1" stop-color="#db2777"/></linearGradient>
-    <clipPath id="lensM"><circle cx="399.5" cy="512" r="250"/></clipPath>
-  </defs>
-  <circle cx="399.5" cy="512" r="250" fill="url(#kkGrad)"/>
-  <circle cx="624.5" cy="512" r="250" fill="url(#kkGrad)"/>
-  <g clip-path="url(#lensM)"><circle cx="624.5" cy="512" r="250" fill="#ffffff" fill-opacity="0.22"/></g>
-  <path d="M 453.25,447.375 A 58.75,58.75 0 1,1 512,506.125 L 512,553.125" fill="none" stroke="#ffffff" stroke-width="42.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="512" cy="619" r="23.8" fill="#ffffff"/>
+    <stop offset="1" stop-color="#db2777"/></linearGradient></defs>
+  <g transform="rotate(-15 512 721.76)"><rect x="314" y="236" width="396" height="528" rx="56" fill="url(#kkGrad)" fill-opacity="0.45"/></g>
+  <g transform="rotate(6 512 721.76)"><rect x="314" y="236" width="396" height="528" rx="56" fill="url(#kkGrad)"/>
+    <path d="M 418.94,408.5833999999999 A 93.05999999999999,93.05999999999999 0 1,1 512,501.64339999999993 L 512,576.0913999999999" fill="none" stroke="#ffffff" stroke-width="67.32000000000001" stroke-linecap="round" stroke-linejoin="round"/><circle cx="512" cy="680.4373999999999" r="37.699200000000005" fill="#ffffff"/></g>
 </svg>
