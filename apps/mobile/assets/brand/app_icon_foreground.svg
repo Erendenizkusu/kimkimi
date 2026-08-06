@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs><linearGradient id="kkGrad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#5b21b6"/>
+    <stop offset="0.45" stop-color="#9333ea"/>
+    <stop offset="1" stop-color="#db2777"/></linearGradient></defs>
+  <defs>
+    <clipPath id="lensA"><circle cx="407.6" cy="512" r="232"/></clipPath>
+    <clipPath id="haloA"><circle cx="407.6" cy="512" r="252.88"/></clipPath>
+  </defs>
+  <circle cx="407.6" cy="512" r="197.2" fill="none" stroke="#ffffff" stroke-width="69.6"/>
+  <circle cx="616.4" cy="512" r="197.2" fill="none" stroke="#ffffff" stroke-width="69.6"/>
+  <g clip-path="url(#haloA)"><circle cx="616.4" cy="512" r="252.88" fill="url(#kkGrad)"/></g>
+  <g clip-path="url(#lensA)"><circle cx="616.4" cy="512" r="232" fill="#ffffff"/></g>
+  <path d="M 457.48,452.028 A 54.519999999999996,54.519999999999996 0 1,1 512,506.548 L 512,550.164" fill="none" stroke="#7c1fd4" stroke-width="39.440000000000005" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="512" cy="611.296" r="22.086400000000005" fill="#7c1fd4"/>
+</svg>

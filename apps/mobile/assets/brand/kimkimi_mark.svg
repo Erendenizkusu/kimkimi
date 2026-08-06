@@ -1,25 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none" role="img" aria-labelledby="kkMarkTitle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="kkMarkTitle">
   <title id="kkMarkTitle">KimKimi</title>
   <defs>
-    <linearGradient id="kkMarkGrad" x1="4" y1="8" x2="76" y2="72" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5b21b6"/>
-      <stop offset="0.45" stop-color="#9333ea"/>
-      <stop offset="1" stop-color="#db2777"/>
-    </linearGradient>
-    <filter id="kkMarkDrop" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#1e1033" flood-opacity="0.35"/>
-    </filter>
+    <linearGradient id="kkGrad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#5b21b6"/>
+    <stop offset="0.45" stop-color="#9333ea"/>
+    <stop offset="1" stop-color="#db2777"/></linearGradient>
+    <clipPath id="lensM"><circle cx="399.5" cy="512" r="250"/></clipPath>
   </defs>
-  <!-- 0ki oyuncu / iki daire kesi_imi: ortak tahmin alan1 -->
-  <circle cx="28" cy="40" r="24" fill="url(#kkMarkGrad)" filter="url(#kkMarkDrop)"/>
-  <circle cx="52" cy="40" r="24" fill="url(#kkMarkGrad)" fill-opacity="0.9" filter="url(#kkMarkDrop)"/>
-  <text
-    x="40"
-    y="53"
-    text-anchor="middle"
-    font-size="34"
-    font-weight="800"
-    fill="#fafafa"
-    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-  >?</text>
+  <circle cx="399.5" cy="512" r="250" fill="url(#kkGrad)"/>
+  <circle cx="624.5" cy="512" r="250" fill="url(#kkGrad)"/>
+  <g clip-path="url(#lensM)"><circle cx="624.5" cy="512" r="250" fill="#ffffff" fill-opacity="0.22"/></g>
+  <path d="M 453.25,447.375 A 58.75,58.75 0 1,1 512,506.125 L 512,553.125" fill="none" stroke="#ffffff" stroke-width="42.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="512" cy="619" r="23.8" fill="#ffffff"/>
 </svg>
