@@ -24,6 +24,21 @@ Renkler mevcut markadan: mor → menekşe → magenta (`#5b21b6` → `#9333ea` �
 
 SVG'ler tasarımın kaynağıdır; PNG'ler türetilmiştir.
 
+## Web/admin kopyaları — burası değişirse onlar da değişmeli
+
+Bu klasör tek kaynak; web tarafındaki dosyalar buradan türetildi ve **otomatik
+senkron değil**:
+
+| Dosya | Kaynağı |
+|---|---|
+| `apps/web/public/brand/kimkimi-mark.svg` | `kimkimi_mark.svg` — aynı çizim, viewBox içeriğe kırpılmış |
+| `apps/web/app/icon.svg` | `app_icon.svg` — birebir |
+| `apps/web/app/favicon.ico` · `apps/admin/app/favicon.ico` | `../icon/play_store_512.png` → 16/32/48 |
+| `apps/web/app/apple-icon.png` | `../icon/play_store_512.png` → 180×180 |
+
+`.ico` ve `apple-icon.png` üretimi (Windows, ek bağımlılık yok): `System.Drawing`
+ile 512'lik PNG'yi ölçekleyip ICO başlığını elle yaz — ayrıntı için bu commit'e bak.
+
 ## Tasarım kısıtları — değiştirirken dikkat
 
 - **Yazı koyma.** Launcher'da ikon 48dp; o boyutta yazı okunaksız lekeye dönüşür.

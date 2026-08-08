@@ -3,7 +3,11 @@ type KimKimiMarkProps = {
   className?: string;
 };
 
-/** Ortak marka SVG (`/public/brand/kimkimi-mark.svg`). Mobil `assets/brand/kimkimi_mark.svg` ile aynı. */
+/**
+ * Ortak marka SVG (`/public/brand/kimkimi-mark.svg`). Çizim mobil
+ * `apps/mobile/assets/brand/kimkimi_mark.svg` ile birebir aynı; yalnızca viewBox
+ * içeriğe kırpılmış (küçük boyutlarda işaret kaybolmasın diye).
+ */
 export function KimKimiMark({ size = 36, className }: KimKimiMarkProps) {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- statik SVG marka; next/image SVG için ek yapı gerekir

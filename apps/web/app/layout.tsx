@@ -6,6 +6,7 @@ import { KimKimiMark } from '@/components/brand/KimKimiMark';
 import { AmbientBackground } from '@/components/layout/AmbientBackground';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { getSiteUrl } from '@/lib/config';
 
 import './globals.css';
 
@@ -29,17 +30,28 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  // Göreli yollar (canonical, OG görseli) bunun üstüne kuruluyor. Tanımsız
+  // bırakılırsa Next localhost'u varsayar ve paylaşım önizlemeleri kırılır.
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: 'KimKimi — Kim kimi ne kadar tanıyor?',
     template: '%s | KimKimi',
   },
   description:
     'İki kişilik, kategorilere göre sorular ve puanlı bilgi yarışması. Arkadaş, sevgili veya spor arkadaşınla oyna.',
+  alternates: { canonical: '/' },
   openGraph: {
     title: 'KimKimi',
     description: 'Kim kimi ne kadar tanıyor? Kategori seç, soruları cevapla, skorunu gör.',
+    url: '/',
+    siteName: 'KimKimi',
     type: 'website',
     locale: 'tr_TR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'KimKimi',
+    description: 'Kim kimi ne kadar tanıyor? Kategori seç, soruları cevapla, skorunu gör.',
   },
 };
 

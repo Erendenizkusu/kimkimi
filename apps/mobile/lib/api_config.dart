@@ -1,6 +1,10 @@
 /// Canlı API — web uygulamasının kökü + `/api`.
 /// Özel alan adına geçilirse yalnızca burası değişir.
-const String kProductionApiBase = 'https://kimkimi.vercel.app/api';
+///
+/// UYARI: Bu adres mağaza paketinin içine gömülür ve yayınlandıktan sonra ancak
+/// yeni bir sürümle değişir. `kimkimi.app` Vercel'deki web projesine bağlı ve
+/// yayında olmadan sürüm paketi üretme — aksi halde uygulama hiç açılmaz.
+const String kProductionApiBase = 'https://kimkimi.app/api';
 
 /// API taban adresi. **Varsayılan üretimdir**: bayrak unutulursa uygulama
 /// çalışmaya devam eder, mağazaya kırık paket gitmez.

@@ -1,25 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none" role="img" aria-labelledby="kkMarkTitle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="131 161 693 693" role="img" aria-labelledby="kkMarkTitle">
   <title id="kkMarkTitle">KimKimi</title>
-  <defs>
-    <linearGradient id="kkMarkGrad" x1="4" y1="8" x2="76" y2="72" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5b21b6"/>
-      <stop offset="0.45" stop-color="#9333ea"/>
-      <stop offset="1" stop-color="#db2777"/>
-    </linearGradient>
-    <filter id="kkMarkDrop" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#1e1033" flood-opacity="0.35"/>
-    </filter>
-  </defs>
-  <!-- 0ki oyuncu / iki daire kesi_imi: ortak tahmin alan1 -->
-  <circle cx="28" cy="40" r="24" fill="url(#kkMarkGrad)" filter="url(#kkMarkDrop)"/>
-  <circle cx="52" cy="40" r="24" fill="url(#kkMarkGrad)" fill-opacity="0.9" filter="url(#kkMarkDrop)"/>
-  <text
-    x="40"
-    y="53"
-    text-anchor="middle"
-    font-size="34"
-    font-weight="800"
-    fill="#fafafa"
-    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-  >?</text>
+  <!-- Mobil `apps/mobile/assets/brand/kimkimi_mark.svg` ile aynı çizim.
+       Tek fark viewBox: kaynak 1024×1024 tuvalde çizili ama kart yığını
+       tuvalin ortasındaki ~%60'lık alanı kaplıyor. Header'da 34 px'e
+       küçültünce işaret 20 px'e düşüyordu; viewBox içeriğe kırpıldı. -->
+  <defs><linearGradient id="kkGrad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#5b21b6"/>
+    <stop offset="0.45" stop-color="#9333ea"/>
+    <stop offset="1" stop-color="#db2777"/></linearGradient></defs>
+  <g transform="rotate(-15 512 721.76)"><rect x="314" y="236" width="396" height="528" rx="56" fill="url(#kkGrad)" fill-opacity="0.45"/></g>
+  <g transform="rotate(6 512 721.76)"><rect x="314" y="236" width="396" height="528" rx="56" fill="url(#kkGrad)"/>
+    <path d="M 418.94,408.5833999999999 A 93.05999999999999,93.05999999999999 0 1,1 512,501.64339999999993 L 512,576.0913999999999" fill="none" stroke="#ffffff" stroke-width="67.32000000000001" stroke-linecap="round" stroke-linejoin="round"/><circle cx="512" cy="680.4373999999999" r="37.699200000000005" fill="#ffffff"/></g>
 </svg>

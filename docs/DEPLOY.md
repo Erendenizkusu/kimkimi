@@ -55,7 +55,7 @@ Vercel → **Add New → Project → GitHub → bu repo**.
 | `DATABASE_URL` | Neon pooled bağlantı dizini | zorunlu |
 | `JWT_SECRET` | güçlü rastgele değer (32+ karakter) | zorunlu, gizli — admin girişini imzalar |
 | `JWT_EXPIRES_IN` | `8h` | isteğe bağlı |
-| `NEXT_PUBLIC_SITE_URL` | `https://kimkimi.vercel.app` | SEO / sitemap |
+| `NEXT_PUBLIC_SITE_URL` | `https://kimkimi.app` | SEO / sitemap / OG. Boş bırakılırsa üretimde `lib/config.ts` → `SITE_URL` kullanılır |
 | `NEXT_PUBLIC_API_URL` | **boş bırak** | doluysa API başka bir host'a gider; boşken aynı origin (`/api`) |
 
 Deploy sonrası doğrulama:
@@ -65,22 +65,48 @@ curl https://<domain>/api/health          # {"status":"ok","db":true}
 curl https://<domain>/api/public/categories
 ```
 
-## 3) Vercel — admin paneli
+## 3) Alan adı — `kimkimi.app`
+
+Alan adı Vercel üzerinden alındı, yani DNS'i zaten Vercel'de; ayrı bir kayıt şirketinde
+nameserver değiştirmek gerekmiyor. Kalan iş onu **web projesine bağlamak**:
+
+1. Vercel → **web projesi** → Settings → Domains → `kimkimi.app` ekle.
+2. `www.kimkimi.app`'i de ekle ve köke **redirect** olarak işaretle (tek kanonik adres).
+3. `NEXT_PUBLIC_SITE_URL` = `https://kimkimi.app` (Production).
+4. Admin ayrı bir Vercel projesi — istersen aynı domain altında `admin.kimkimi.app`
+   alt alanını o projeye bağla.
+
+Kodda alan adının geçtiği yerler:
+
+| Yer | Ne yapar |
+|---|---|
+| `apps/web/lib/config.ts` → `SITE_URL` | `metadataBase`, `sitemap.xml`, `robots.txt` ve canonical'ın kaynağı |
+| `apps/mobile/lib/api_config.dart` → `kProductionApiBase` | Mağaza paketine **gömülür** — aşağıdaki uyarıya bak |
+
+Bağlandıktan sonra doğrula:
+
+```bash
+curl -I https://kimkimi.app                       # 200
+curl https://kimkimi.app/api/health               # {"status":"ok","db":true}
+curl https://kimkimi.app/robots.txt               # sitemap: https://kimkimi.app/sitemap.xml
+```
+
+## 4) Vercel — admin paneli
 
 Ayrı proje, **Root Directory:** `apps/admin`.
 
 | Anahtar | Değer |
 |---|---|
-| `API_URL` | `https://<web-domain>/api` — **sondaki `/api` şart** |
+| `API_URL` | `https://kimkimi.app/api` — **sondaki `/api` şart** |
 
 Admin, API'yi sunucu tarafından (`lib/server-api.ts`) çağırıyor; tarayıcı CORS'u devreye
 girmiyor. Token `admin_access_token` çerezinde tutulup `Authorization: Bearer` olarak
 iletiliyor.
 
-## 4) Mobil
+## 5) Mobil
 
-Varsayılan **üretimdir** — `api_config.dart` içindeki `kProductionApiBase`. Mağaza paketi
-için ekstra bayrak gerekmez:
+Varsayılan **üretimdir** — `api_config.dart` içindeki `kProductionApiBase`, artık
+`https://kimkimi.app/api`. Mağaza paketi için ekstra bayrak gerekmez:
 
 ```bash
 cd apps/mobile
@@ -99,9 +125,11 @@ flutter run --dart-define=API_BASE=http://127.0.0.1:3000/api     # iOS sim / mas
 flutter run --dart-define=API_BASE=http://<PC_LAN_IP>:3000/api   # gerçek cihaz
 ```
 
-Özel alan adına geçilirse yalnızca `kProductionApiBase` değişir.
+> **Sıralama önemli.** Bu adres pakete gömülür ve yayınlandıktan sonra ancak yeni bir
+> sürümle değişir. `kimkimi.app` web projesine bağlanıp `curl https://kimkimi.app/api/health`
+> yanıt vermeden sürüm paketi üretme; aksi halde mağazadaki uygulama hiç açılmaz.
 
-## 5) Render'ı kapat
+## 6) Render'ı kapat
 
 Eski `kimkimi-api` servisi ve `render.yaml` artık kullanılmıyor. Render panelinden servisi
 sil — aksi halde free instance saatlerini boşa harcamaya devam eder.

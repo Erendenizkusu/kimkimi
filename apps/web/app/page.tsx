@@ -31,8 +31,11 @@ export default function HomePage() {
             Kim kimi ne kadar tanıyor?
           </h1>
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-kk-fg-soft motion-safe:animate-fade-in-up motion-safe:opacity-0 motion-safe:delay-150">
-            Aynı anda cevaplayın, turlar bitsin, skoru görün. İstersen kahraman arka plana kendi GIF’ini ekleyerek o
-            &quot;ismiyle çağır&quot; enerjisini buraya taşıyabilirsin.
+            İki kişilik bir tanıma testi. Önce herkes kendi hakkındaki soruları cevaplar, sonra sıra karşındakini
+            tahmin etmeye gelir — turlar bitince kimin kimi daha iyi tanıdığı skor tablosunda ortaya çıkar.
+          </p>
+          <p className="mt-4 max-w-lg text-sm font-medium text-kk-muted-strong motion-safe:animate-fade-in-up motion-safe:opacity-0 motion-safe:delay-150">
+            Sevgili · Arkadaş · Aile · İş arkadaşı · Antrenman arkadaşı · Eğlence
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4 motion-safe:animate-fade-in-up motion-safe:opacity-0 motion-safe:delay-200">
             <Link

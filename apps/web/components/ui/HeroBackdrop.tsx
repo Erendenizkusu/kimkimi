@@ -10,7 +10,9 @@ type Props = {
 };
 
 /**
- * Ana sayfa kahraman: GIF, bölüm kutusuna sığar (object-contain), ortalanır, taşmaz.
+ * Ana sayfa kahraman: GIF bölüm kutusunu tamamen doldurur (object-cover).
+ * Kutu geniş ve alçak, GIF'ler ise genelde kare — `contain` kullanıldığında
+ * ortada küçük bir kare kalıyordu. Kırpma kenarlardan olur, ilgi merkezi ortada.
  */
 export function HeroBackdrop({ envGifUrl }: Props) {
   const candidates = useMemo(() => {
@@ -47,16 +49,14 @@ export function HeroBackdrop({ envGifUrl }: Props) {
   return (
     <div className="absolute inset-0 overflow-hidden rounded-[inherit]" aria-hidden>
       {showGif && src ? (
-        <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={src}
-            alt=""
-            decoding="async"
-            className="max-h-full max-w-full object-contain object-center opacity-[0.44]"
-            onError={() => setIndex((i) => i + 1)}
-          />
-        </div>
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt=""
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.44]"
+          onError={() => setIndex((i) => i + 1)}
+        />
       ) : null}
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--kk-hero-scrim-from)] via-[var(--kk-hero-scrim-via)] to-[var(--kk-hero-scrim-to)]" />
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--kk-hero-tint-from)] via-transparent to-[var(--kk-hero-tint-to)]" />

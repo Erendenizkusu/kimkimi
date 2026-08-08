@@ -13,7 +13,7 @@ Dosyalar ve kullanıldıkları yerler
 | **whoAmI.gif** | Kahraman arka plan yedeği. |
 | **whoAreU.gif** | Kahraman arka plan yedeği (sıranın sonunda). |
 | **sayMyName.gif** | Oyun bitti — kazanan kutlaması. |
-| **hero.gif** | Ana sayfa kahraman arka planı (tam görünür, kırpılmaz). |
+| **hero.gif** | Ana sayfa kahraman arka planı (kutuyu tamamen doldurur, kenarlardan kırpılır — ilgi merkezi ortada olsun). |
 
 Yedek adlar (404 olursa otomatik denenir): `WeSee.gif`, `DoYouKnow.gif`, `WaitAMinute.gif`, `WhoAmI.gif`, `whoareu.gif`, `SayMyName.gif`.
 
