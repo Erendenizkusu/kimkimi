@@ -58,11 +58,26 @@ Vercel → **Add New → Project → GitHub → bu repo**.
 | `NEXT_PUBLIC_SITE_URL` | `https://kimkimi.app` | SEO / sitemap / OG. Boş bırakılırsa üretimde `lib/config.ts` → `SITE_URL` kullanılır |
 | `NEXT_PUBLIC_API_URL` | **boş bırak** | doluysa API başka bir host'a gider; boşken aynı origin (`/api`) |
 
+**Fonksiyon bölgesi — atlanırsa her istek Atlantik'i geçer.** Settings → Functions →
+Function Region → **Frankfurt (fra1)**. Neon da Frankfurt'ta olduğu için ikisi yan yana
+gelir. Varsayılan `iad1` (Washington DC) bırakılırsa fonksiyon ABD'de, veritabanı
+Almanya'da çalışır ve her Prisma sorgusu okyanusu geçer. Ölçtüğümüz fark:
+
+| Uç nokta | iad1 (varsayılan) | fra1 |
+|---|---|---|
+| `/api/public/categories` | 572 ms | 106 ms |
+| `/api/health` | 323 ms | 77 ms |
+
+Bölgeyi değiştirdikten sonra **yeniden deploy şart**, ayar tek başına yetmiyor.
+Doğrulama: yanıt başlığındaki `x-vercel-id` `fra1::fra1::…` olmalı. İkinci bölüm
+fonksiyonun çalıştığı bölgedir; `fra1::iad1::…` görüyorsan ayar uygulanmamış.
+
 Deploy sonrası doğrulama:
 
 ```bash
 curl https://<domain>/api/health          # {"status":"ok","db":true}
 curl https://<domain>/api/public/categories
+curl -I https://<domain>/api/health | grep x-vercel-id   # fra1::fra1::…
 ```
 
 ## 3) Alan adı — `kimkimi.app`
