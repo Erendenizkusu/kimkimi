@@ -42,6 +42,7 @@ const config: Config = {
           'on-violet-fg': 'var(--kk-on-violet-fg)',
           link: 'var(--kk-link)',
           'link-hover': 'var(--kk-link-hover)',
+          accent: 'var(--kk-accent)',
         },
       },
       keyframes: {

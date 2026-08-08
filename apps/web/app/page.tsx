@@ -25,14 +25,17 @@ export default function HomePage() {
             <KimKimiMark size={72} className="drop-shadow-[0_8px_24px_rgba(91,33,182,0.45)]" />
           </div>
           <p className="font-display text-xs font-semibold uppercase tracking-[0.35em] text-kk-nav-cta motion-safe:animate-fade-in-up motion-safe:opacity-0">
-            Tanı — tahmin — skor
+            Tanı · Tahmin · Skor
           </p>
           <h1 className="font-display mt-4 max-w-xl text-4xl font-bold leading-[1.1] tracking-tight text-kk-fg motion-safe:animate-fade-in-up motion-safe:opacity-0 motion-safe:delay-75 sm:text-5xl">
             Kim kimi ne kadar tanıyor?
           </h1>
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-kk-fg-soft motion-safe:animate-fade-in-up motion-safe:opacity-0 motion-safe:delay-150">
             İki kişilik bir tanıma testi. Önce herkes kendi hakkındaki soruları cevaplar, sonra sıra karşındakini
-            tahmin etmeye gelir — turlar bitince kimin kimi daha iyi tanıdığı skor tablosunda ortaya çıkar.
+            tahmin etmeye gelir.{' '}
+            <span className="font-semibold text-kk-accent">
+              Turlar bitince kimin kimi daha iyi tanıdığı skor tablosunda ortaya çıkar.
+            </span>
           </p>
           <p className="mt-4 max-w-lg text-sm font-medium text-kk-muted-strong motion-safe:animate-fade-in-up motion-safe:opacity-0 motion-safe:delay-150">
             Sevgili · Arkadaş · Aile · İş arkadaşı · Antrenman arkadaşı · Eğlence

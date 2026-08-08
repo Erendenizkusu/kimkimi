@@ -46,6 +46,9 @@
   --kk-on-violet-fg: #fafafa;
   --kk-link: #a78bfa;
   --kk-link-hover: #c4b5fd;
+  /* Cümle içi vurgu. Marka gradyanının magenta ucundan; eyebrow'daki menekşeden
+     ayrışsın diye bilinçli olarak farklı bir ton. */
+  --kk-accent: #f0abfc;
 
   --kk-ambient-base: #09090b;
   --kk-ambient-radial: rgba(109, 40, 217, 0.35);
@@ -110,6 +113,7 @@
   --kk-on-violet-fg: #2e1065;
   --kk-link: #5b21b6;
   --kk-link-hover: #6d28d9;
+  --kk-accent: #a21caf;
 
   --kk-ambient-base: #f5f0ff;
   --kk-ambient-radial: rgba(139, 92, 246, 0.42);
